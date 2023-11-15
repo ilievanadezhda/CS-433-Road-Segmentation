@@ -1,14 +1,14 @@
-""" Custom Dataset Class for PyTorch """
+""" Custom Train Dataset Class for PyTorch """
 import os
-from torch.utils.data import Dataset
 from PIL import Image
+from torch.utils.data import Dataset
 
-class CustomDataset(Dataset):
+class TrainDataset(Dataset):
     def __init__(self, image_folder, gt_folder, transform=None):
         self.image_folder = image_folder
         self.gt_folder = gt_folder
         self.transform = transform
-        
+
         # list the file names of images and ground truths
         self.image_files = os.listdir(image_folder)
         self.gt_files = os.listdir(gt_folder)
