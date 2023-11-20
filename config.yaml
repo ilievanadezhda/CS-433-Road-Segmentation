@@ -1,0 +1,55 @@
+# General
+seed=0,
+# Data folders
+image_folder='datasets/train/images/',
+gt_folder='datasets/train/groundtruth/',
+# Data tranforms
+# random_resized_crop: crop a random portion of image and resize it to a given size
+random_resized_crop=False,
+output_size=(400, 400),  # expected output size of the crop, for each edge.
+random_resized_crop_scale=(0.5, 1.0),
+# random_horizontal_flip: randomly flip the image horizontally with a given probability
+random_horizontal_flip=False,
+# random_vertical_flip: randomly flip the image vertically with a given probability
+random_vertical_flip=False,
+# random_rotation: randomly rotate the image with a given probability
+random_rotation=False,
+degrees=10,  # range of degrees to select from
+# color_jitter: randomly change the brightness, contrast and saturation of an image
+color_jitter=False,
+brightness=0.1,  # how much to jitter brightness.
+contrast=0.1,  # how much to jitter contrast.
+saturation=0.1,  # how much to jitter saturation.
+hue=0.1,  # how much to jitter hue.
+# normalization
+normalization=True,  # TODO: Should it always be True?
+# Data loaders
+batch_size=4,
+train_size=0.8,
+val_size=0.1,
+test_size=0.1,
+# Model
+# UNetV1
+model_name='UNetV1',
+model_pretrained=False,
+model_scale=0.5,
+model_save_name='checkpoints/unetv1-1',
+# UNetV2
+model_name='UNetV2',
+model_in_channels=3,
+model_out_channels=1,
+model_init_features=32,
+model_pretrained=False,
+model_save_name='checkpoints/unetv2-1',
+# Optimizer
+optim_name='sgd',
+optim_lr=0.1,
+optim_momentum=0.9, # TODO: Try with (optim_momentum != 0) and without (momentum = 0)?
+# Training
+n_steps=2000,
+eval_freq = 100,
+# Eval
+ckpt_save_dir="./checkpoints/default-run",
+# Wandb logging
+wandb_project="road-segmentation",
+wandb_run="run1"

@@ -20,8 +20,6 @@ class TestDataset(Dataset):
                         image_paths.append(os.path.join(folder_path, filename))
         # sort based on the index in the filename [test_0.png, test_1.png, ...]
         image_paths = sorted(image_paths, key=extract_index)
-        # print
-        print(image_paths)
         # return
         return image_paths
 
