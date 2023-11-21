@@ -8,3 +8,4 @@ predictions/
 models/__pycache__/
 checkpoints/
 wandb/
+misc/
