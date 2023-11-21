@@ -1,17 +1,16 @@
-""" Custom Train Dataset Class for PyTorch """
+""" Custom Base Dataset Class for PyTorch """
 import os
 from PIL import Image
 from torch.utils.data import Dataset
 
-class TrainDataset(Dataset):
-    def __init__(self, image_folder, gt_folder, transform=None):
+class BaseDataset(Dataset):
+    def __init__(self, image_folder, gt_folder):
         self.image_folder = image_folder
         self.gt_folder = gt_folder
-        self.transform = transform
 
         # list the file names of images and ground truths
         self.image_files = os.listdir(image_folder)
-        self.gt_files = os.listdir(gt_folder)
+        self.gt_files = os.listdir(gt_folder)   
 
         # ensure that the two lists have the same length
         assert len(self.image_files) == len(self.gt_files)
@@ -25,9 +24,5 @@ class TrainDataset(Dataset):
 
         image = Image.open(image_path)
         ground_truth = Image.open(gt_path)
-
-        if self.transform:
-            image = self.transform(image)
-            ground_truth = self.transform(ground_truth)
 
         return image, ground_truth

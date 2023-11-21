@@ -5,3 +5,6 @@ datasets/__pycache__/
 models/
 predictions/
 *.csv
+models/__pycache__/
+checkpoints/
+wandb/
