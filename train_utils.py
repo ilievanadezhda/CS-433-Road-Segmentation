@@ -30,7 +30,7 @@ def prepare_transforms(args):
     if args.random_rotation:
         print(f"Using RandomRotation with degrees={args.degrees}.")
         random_transform.append(transforms.RandomRotation(degrees=args.degrees))
-    # prepare additional deterministic transforms for image and groundtruth (these do not need to be applied at the same time)
+    # prepare additional transforms for image and groundtruth (these do not need to be applied at the same time)
     # the goal is to allow some flexibility in the transforms applied to the image and groundtruth, e.g. color jitter for image only.
     image_transform = []
     gt_transform = []
