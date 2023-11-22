@@ -92,9 +92,15 @@ def prepare_data(args):
     # get image and groundtruth transforms (for train set)
     random_transform, image_transform, gt_transform = prepare_transforms(args)
     # create transforms for images and groundtruths for validation and test sets
-    tt_transform_image = transforms.Compose(
-        [transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]
-    )  # TODO: Should we always normalize?
+    if args.normalization:
+        std = 1.0 / 255.0
+        means = [0.485, 0.456, 0.406]
+        tt_transform_image = transforms.Compose(
+            [transforms.ToTensor(), transforms.Normalize(means, std=[std] * 3)]
+        )  # TODO: Should we always normalize?
+    else:
+        tt_transform_image = transforms.Compose([transforms.ToTensor()])
+
     tt_transform_gt = transforms.Compose(
         [transforms.ToTensor()]
     )  # No normalization for groundtruth!
