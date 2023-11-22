@@ -2,7 +2,6 @@
 __pycache__/
 datasets/__pycache__/
 *.png
-models/
 predictions/
 *.csv
 models/__pycache__/
