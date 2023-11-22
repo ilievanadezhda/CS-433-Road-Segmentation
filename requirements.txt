@@ -2,3 +2,5 @@ torch
 torchvision
 timm
 matplotlib
+omegaconf
+wandb

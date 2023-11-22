@@ -33,14 +33,17 @@ test_size=0.1,
 model_name='UNetV1',
 model_pretrained=False,
 model_scale=0.5,
-model_save_name='checkpoints/unetv1-1',
+model_save_name='models/checkpoints/unetv1-1.pt',
 # UNetV2
-model_name='UNetV2',
+model_name="UNetV2",
 model_in_channels=3,
 model_out_channels=1,
 model_init_features=32,
 model_pretrained=False,
-model_save_name='checkpoints/unetv2-1',
+model_save_name="models/checkpoints/unetv2-1.pt",
+# ResNet101
+model_pretrained=False
+model_save_name="models/checkpoints/deeplabv3_resnet101.pt",
 # Optimizer
 optim_name='sgd',
 optim_lr=0.1,
@@ -52,4 +55,5 @@ eval_freq = 100,
 ckpt_save_dir="./checkpoints/default-run",
 # Wandb logging
 wandb_project="road-segmentation",
-wandb_run="run1"
+wandb_run="run1" # change depending on the model
+entity="feeit"
