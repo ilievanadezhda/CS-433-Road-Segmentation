@@ -47,11 +47,12 @@ def prepare_transforms(args):
         print("Using Normalize with mean=(0.5, 0.5, 0.5) and std=(0.5, 0.5, 0.5).")
         image_transform.append(transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)))
         # gt_transform.append(transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))) -> No normalization for groundtruth
-    print("random_transform: ", random_transform)
-    print("image_transform: ", image_transform)
-    print("gt_transform: ", gt_transform)
     # compose transforms
-    random_transform = transforms.Compose(random_transform)
+    # if there is no random transforms to be applied, set it to None
+    if random_transform == []:
+        random_transform = None
+    else:
+        random_transform = transforms.Compose(random_transform)
     image_transform = transforms.Compose(image_transform)
     gt_transform = transforms.Compose(gt_transform)
     # return (random_transform, image_transform, gt_transform)
