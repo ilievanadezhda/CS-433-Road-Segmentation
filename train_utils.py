@@ -201,11 +201,9 @@ def step_loader(loader, n_steps=-1):
 
 def calculate_metrics(preds, labels):
     smooth = 1e-6
-
     # convert predictions to binary format
     preds = torch.sigmoid(preds)
     preds = (preds > 0.5).float()
-
     # pixel Accuracy
     pixel_accuracy = (preds == labels).sum().item() / (labels.numel() + smooth)
 
@@ -214,7 +212,7 @@ def calculate_metrics(preds, labels):
     union = preds.sum() + labels.sum() - intersection
     iou = (intersection + smooth) / (union + smooth)
 
-    # dice coefficient (F1 Score)
+    # dice coefficient (F1 Score) TODO
     dice = (2 * intersection + smooth) / (preds.sum() + labels.sum() + smooth)
 
     return pixel_accuracy, iou.item(), dice.item()
