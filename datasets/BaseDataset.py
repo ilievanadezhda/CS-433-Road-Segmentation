@@ -3,6 +3,7 @@ import os
 from PIL import Image
 from torch.utils.data import Dataset
 
+
 class BaseDataset(Dataset):
     def __init__(self, image_folder, gt_folder):
         self.image_folder = image_folder
@@ -10,7 +11,7 @@ class BaseDataset(Dataset):
 
         # list the file names of images and ground truths
         self.image_files = os.listdir(image_folder)
-        self.gt_files = os.listdir(gt_folder)   
+        self.gt_files = os.listdir(gt_folder)
 
         # ensure that the two lists have the same length
         assert len(self.image_files) == len(self.gt_files)
