@@ -7,6 +7,7 @@ import torch
 import torchvision.transforms.v2 as transforms
 from models.UNetV1 import UNetV1
 from models.UNetV2 import UNetV2
+from models.UNetV3 import UNetV3
 from models.DeepLabV3 import ResNet101
 from datasets.BaseDataset import BaseDataset
 from datasets.TransformDataset import TransformDataset
@@ -67,15 +68,16 @@ def prepare_transforms(args):
         )
     # convert to tensors
     print("Using ToTensor.")
+    image_transform.append(transforms.Resize((args.input_size, args.input_size)))
+    gt_transform.append(transforms.Resize((args.input_size, args.input_size)))
     image_transform.append(transforms.ToTensor())
     gt_transform.append(transforms.ToTensor())
     # normalization
     if args.normalization:
-        std = 1.0 / 255.0
-        means = [0.485, 0.456, 0.406]
+        std = [0.1967, 0.1896, 0.1897]
+        means = [0.3353, 0.3328, 0.2984]
         # print("Using Normalize with mean=(0.5, 0.5, 0.5) and std=(0.5, 0.5, 0.5).")
-        image_transform.append(transforms.Normalize(mean=means, std=[std] * 3))
-        # gt_transform.append(transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))) -> No normalization for groundtruth
+        image_transform.append(transforms.Normalize(mean=means, std=std))
     # compose transforms
     # if there is no random transforms to be applied, set it to None
     if random_transform == []:
@@ -93,16 +95,20 @@ def prepare_data(args):
     random_transform, image_transform, gt_transform = prepare_transforms(args)
     # create transforms for images and groundtruths for validation and test sets
     if args.normalization:
-        std = 1.0 / 255.0
-        means = [0.485, 0.456, 0.406]
+        std = [0.1967, 0.1896, 0.1897]
+        means = [0.3353, 0.3328, 0.2984]
         tt_transform_image = transforms.Compose(
-            [transforms.ToTensor(), transforms.Normalize(means, std=[std] * 3)]
+            [
+                transforms.Resize((args.input_size, args.input_size)),
+                transforms.ToTensor(),
+                transforms.Normalize(means, std=std),
+            ]
         )  # TODO: Should we always normalize?
     else:
         tt_transform_image = transforms.Compose([transforms.ToTensor()])
 
     tt_transform_gt = transforms.Compose(
-        [transforms.ToTensor()]
+        [transforms.Resize((args.input_size, args.input_size)), transforms.ToTensor()]
     )  # No normalization for groundtruth!
     # create base dataset
     dataset = BaseDataset(image_folder=args.image_folder, gt_folder=args.gt_folder)
@@ -169,6 +175,9 @@ def prepare_model(args):
     elif args.model_name == "ResNet101":
         print("Initializing ResNet101 model.")
         model = ResNet101()
+    elif args.model_name == "UNetV3":
+        print("Initializing UNetV3 model.")
+        model = UNetV3()
     ## ADD MODELS HERE!
     return model
 
@@ -212,10 +221,7 @@ def calculate_metrics(preds, labels):
     union = preds.sum() + labels.sum() - intersection
     iou = (intersection + smooth) / (union + smooth)
 
-    # dice coefficient (F1 Score) TODO
-    dice = (2 * intersection + smooth) / (preds.sum() + labels.sum() + smooth)
-
-    return pixel_accuracy, iou.item(), dice.item()
+    return pixel_accuracy, iou.item()
 
 
 def train(model, device, train_loader, val_loader, criterion, optimizer, args):
@@ -229,7 +235,7 @@ def train(model, device, train_loader, val_loader, criterion, optimizer, args):
     )
     # Upload the configuration file to WandB
     wandb.config.update(config_dict)
-    best_f1_score = 0.0
+    best_iou_score = 0.0
     # training loop
     for step, batch in step_loader(train_loader, args.n_steps):
         # training
@@ -243,12 +249,11 @@ def train(model, device, train_loader, val_loader, criterion, optimizer, args):
         optimizer.step()
         # logging
         wandb.log({"Training Loss": loss.item()}, step=step)
-        train_pixel_accuracy, train_iou, train_dice = calculate_metrics(outputs, labels)
+        train_pixel_accuracy, train_iou = calculate_metrics(outputs, labels)
         wandb.log(
             {
                 "Training Pixel Accuracy": train_pixel_accuracy,
                 "Training IoU": train_iou,
-                "Training Dice": train_dice,
             },
             step=step,
         )
@@ -257,7 +262,6 @@ def train(model, device, train_loader, val_loader, criterion, optimizer, args):
         if step % args.eval_freq == 0:
             model.eval()
             total_val_loss = 0.0
-            total_f1_score = 0.0
             total_pixel_accuracy = 0.0
             total_iou = 0.0
 
@@ -271,14 +275,12 @@ def train(model, device, train_loader, val_loader, criterion, optimizer, args):
                     total_val_loss += val_loss.item()
 
                     # calculate metrics for validation data
-                    val_pixel_accuracy, val_iou, val_dice = calculate_metrics(
+                    val_pixel_accuracy, val_iou = calculate_metrics(
                         val_outputs, val_targets
                     )
-                    total_f1_score += val_dice
                     total_pixel_accuracy += val_pixel_accuracy
                     total_iou += val_iou
 
-            avg_val_f1_score = total_f1_score / len(val_loader)
             avg_pixel_accuracy = total_pixel_accuracy / len(val_loader)
             avg_val_loss = total_val_loss / len(val_loader)
             avg_iou = total_iou / len(val_loader)
@@ -287,14 +289,32 @@ def train(model, device, train_loader, val_loader, criterion, optimizer, args):
                     "Average Validation Loss": avg_val_loss,
                     "Average Validation Pixel Accuracy": avg_pixel_accuracy,
                     "Average Validation IoU": avg_iou,
-                    "Average Validation Dice": avg_val_f1_score,
                 },
                 step=step,
             )
             # Save the model if this is the best F1 score so far
-            if avg_val_f1_score > best_f1_score:
-                best_f1_score = avg_val_f1_score
+            if avg_iou > best_iou_score:
+                best_iou_score = avg_iou
                 torch.save(model.state_dict(), args.model_save_name)
                 print("Best model saved at step: ", step)
 
     return model
+
+
+# calculate mean and std of dataset
+def batch_mean_and_sd(loader):
+    cnt = 0
+    fst_moment = torch.empty(3)
+    snd_moment = torch.empty(3)
+
+    for images, _ in loader:
+        b, c, h, w = images.shape
+        nb_pixels = b * h * w
+        sum_ = torch.sum(images, dim=[0, 2, 3])
+        sum_of_square = torch.sum(images**2, dim=[0, 2, 3])
+        fst_moment = (cnt * fst_moment + sum_) / (cnt + nb_pixels)
+        snd_moment = (cnt * snd_moment + sum_of_square) / (cnt + nb_pixels)
+        cnt += nb_pixels
+
+    mean, std = fst_moment, torch.sqrt(snd_moment - fst_moment**2)
+    return mean, std

@@ -12,4 +12,5 @@ class ResNet101(nn.Module):
 
     def forward(self, x):
         output = self.model(x)
-        return output["out"]
+        output = output["out"]
+        return output

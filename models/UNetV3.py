@@ -7,7 +7,11 @@ import segmentation_models_pytorch as smp
 
 class UNetV3(nn.Module):
     def __init__(
-        self, encoder="resnet50", encoder_weights="imagenet", classes=1, activation=None
+        self,
+        encoder="efficientnet-b5",
+        encoder_weights="imagenet",
+        classes=1,
+        activation=None,
     ):
         super().__init__()
         # Load the model from Torch Hub
@@ -19,4 +23,5 @@ class UNetV3(nn.Module):
         )
 
     def forward(self, x):
-        return self.model(x)
+        output = self.model(x)
+        return output
