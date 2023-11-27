@@ -210,10 +210,9 @@ def step_loader(loader, n_steps=-1):
 
 def calculate_metrics(preds, labels):
     smooth = 1e-6
-    # convert predictions to binary format
     preds = torch.sigmoid(preds)
     preds = (preds > 0.5).float()
-    # pixel Accuracy
+    # Pixel Accuracy
     pixel_accuracy = (preds == labels).sum().item() / (labels.numel() + smooth)
 
     # Intersection-Over-Union (IoU)
@@ -221,7 +220,18 @@ def calculate_metrics(preds, labels):
     union = preds.sum() + labels.sum() - intersection
     iou = (intersection + smooth) / (union + smooth)
 
-    return pixel_accuracy, iou.item()
+    # Precision and Recall for F1 Score
+    true_positives = (preds * labels).sum()
+    predicted_positives = preds.sum()
+    actual_positives = labels.sum()
+
+    precision = true_positives / (predicted_positives + smooth)
+    recall = true_positives / (actual_positives + smooth)
+
+    # F1 Score
+    f1_score = 2 * (precision * recall) / (precision + recall + smooth)
+
+    return pixel_accuracy, iou.item(), f1_score.item()
 
 
 def train(model, device, train_loader, val_loader, criterion, optimizer, args):
@@ -249,11 +259,12 @@ def train(model, device, train_loader, val_loader, criterion, optimizer, args):
         optimizer.step()
         # logging
         wandb.log({"Training Loss": loss.item()}, step=step)
-        train_pixel_accuracy, train_iou = calculate_metrics(outputs, labels)
+        train_pixel_accuracy, train_iou, train_f1 = calculate_metrics(outputs, labels)
         wandb.log(
             {
                 "Training Pixel Accuracy": train_pixel_accuracy,
                 "Training IoU": train_iou,
+                "Training F1 Score": train_f1,
             },
             step=step,
         )
@@ -264,7 +275,7 @@ def train(model, device, train_loader, val_loader, criterion, optimizer, args):
             total_val_loss = 0.0
             total_pixel_accuracy = 0.0
             total_iou = 0.0
-
+            total_f1 = 0.0
             with torch.no_grad():
                 for val_inputs, val_targets in val_loader:
                     val_inputs = val_inputs.to(device)
@@ -275,20 +286,23 @@ def train(model, device, train_loader, val_loader, criterion, optimizer, args):
                     total_val_loss += val_loss.item()
 
                     # calculate metrics for validation data
-                    val_pixel_accuracy, val_iou = calculate_metrics(
+                    val_pixel_accuracy, val_iou, val_f1 = calculate_metrics(
                         val_outputs, val_targets
                     )
                     total_pixel_accuracy += val_pixel_accuracy
                     total_iou += val_iou
+                    total_f1 += val_f1
 
             avg_pixel_accuracy = total_pixel_accuracy / len(val_loader)
             avg_val_loss = total_val_loss / len(val_loader)
             avg_iou = total_iou / len(val_loader)
+            avg_f1 = total_f1 / len(val_loader)
             wandb.log(
                 {
                     "Average Validation Loss": avg_val_loss,
                     "Average Validation Pixel Accuracy": avg_pixel_accuracy,
                     "Average Validation IoU": avg_iou,
+                    "Average Validation F1 Score": avg_f1,
                 },
                 step=step,
             )
