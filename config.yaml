@@ -1,8 +1,8 @@
 # General
 seed=0,
 # Data folders
-image_folder='datasets/train/images/',
-gt_folder='datasets/train/groundtruth/',
+image_folders=['datasets/train/images/'],
+gt_folders=['datasets/train/groundtruth/'],
 # Data tranforms
 # random_resized_crop: crop a random portion of image and resize it to a given size
 random_resized_crop=False,
