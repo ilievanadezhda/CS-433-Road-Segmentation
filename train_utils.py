@@ -23,7 +23,7 @@ def set_seeds(seed=42):
 
 
 def prepare_transforms(args):
-    # prepare random transform (to be applied at the same time to both image and groundtruth, for consistency)
+    # prepare random transform (to be applied at the same time to both image and groundtruth, for consistency).
     # the goal is to avoid scenarios like flipping the image but not the groundtruth.
     random_transform = []
     # random resized crop
@@ -66,18 +66,22 @@ def prepare_transforms(args):
                 hue=args.hue,
             )
         )
-    # convert to tensors
-    print("Using ToTensor.")
+    # resize
+    print(f"Using Resize with input size={args.input_size}.")
     image_transform.append(transforms.Resize((args.input_size, args.input_size)))
     gt_transform.append(transforms.Resize((args.input_size, args.input_size)))
+    # convert to tensors
+    print("Using ToTensor.")
     image_transform.append(transforms.ToTensor())
     gt_transform.append(transforms.ToTensor())
     # normalization
     if args.normalization:
+        mean = [0.3353, 0.3328, 0.2984]
         std = [0.1967, 0.1896, 0.1897]
-        means = [0.3353, 0.3328, 0.2984]
-        # print("Using Normalize with mean=(0.5, 0.5, 0.5) and std=(0.5, 0.5, 0.5).")
-        image_transform.append(transforms.Normalize(mean=means, std=std))
+        print(
+            f"Using Normalize with mean={mean} and std={std}."
+        )
+        image_transform.append(transforms.Normalize(mean=mean, std=std))
     # compose transforms
     # if there is no random transforms to be applied, set it to None
     if random_transform == []:
@@ -93,34 +97,31 @@ def prepare_transforms(args):
 def prepare_data(args):
     # get image and groundtruth transforms (for train set)
     random_transform, image_transform, gt_transform = prepare_transforms(args)
-    # create transforms for images and groundtruths for validation and test sets
+    # create image transform for validation set
     if args.normalization:
+        mean = [0.3353, 0.3328, 0.2984]
         std = [0.1967, 0.1896, 0.1897]
-        means = [0.3353, 0.3328, 0.2984]
         tt_transform_image = transforms.Compose(
             [
                 transforms.Resize((args.input_size, args.input_size)),
                 transforms.ToTensor(),
-                transforms.Normalize(means, std=std),
+                transforms.Normalize(mean=mean, std=std),
             ]
-        )  # TODO: Should we always normalize?
+        )
     else:
-        tt_transform_image = transforms.Compose([transforms.ToTensor()])
-
-    tt_transform_gt = transforms.Compose(
-        [transforms.Resize((args.input_size, args.input_size)), transforms.ToTensor()]
-    )  # No normalization for groundtruth!
+        tt_transform_image = transforms.Compose([transforms.Resize((args.input_size, args.input_size)), transforms.ToTensor()])
+    # create groundtruth transform for validation set
+    tt_transform_gt = transforms.Compose([transforms.Resize((args.input_size, args.input_size)), transforms.ToTensor()])
     # create base dataset
     dataset = BaseDataset(image_folder=args.image_folder, gt_folder=args.gt_folder)
     # seed for reproducibility
     set_seeds()
-    # split the dataset into train, validation and test set
-    train_set, val_set, test_set = torch.utils.data.random_split(
+    # split the dataset into train and validation sets
+    train_set, val_set = torch.utils.data.random_split(
         dataset,
         [
             int(args.train_size * len(dataset)),
-            int(args.val_size * len(dataset)),
-            int(args.test_size * len(dataset)),
+            int(args.val_size * len(dataset))
         ],
     )
     # apply transforms
@@ -136,12 +137,6 @@ def prepare_data(args):
         image_transform=tt_transform_image,
         gt_transform=tt_transform_gt,
     )
-    test_set = TransformDataset(
-        test_set,
-        random_transform=None,
-        image_transform=tt_transform_image,
-        gt_transform=tt_transform_gt,
-    )
     # create data loaders
     train_loader = torch.utils.data.DataLoader(
         train_set, batch_size=args.batch_size, shuffle=True
@@ -149,11 +144,8 @@ def prepare_data(args):
     val_loader = torch.utils.data.DataLoader(
         val_set, batch_size=args.batch_size, shuffle=True
     )
-    test_loader = torch.utils.data.DataLoader(
-        test_set, batch_size=args.batch_size, shuffle=True
-    )
     # return data loaders
-    return train_loader, val_loader, test_loader
+    return train_loader, val_loader
 
 
 def prepare_model(args):
@@ -178,7 +170,7 @@ def prepare_model(args):
     elif args.model_name == "UNetV3":
         print("Initializing UNetV3 model.")
         model = UNetV3()
-    ## ADD MODELS HERE!
+    # ADD MODELS HERE!
     return model
 
 
