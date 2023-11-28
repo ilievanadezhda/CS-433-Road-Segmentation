@@ -113,7 +113,7 @@ def prepare_data(args):
     # create groundtruth transform for validation set
     tt_transform_gt = transforms.Compose([transforms.Resize((args.input_size, args.input_size)), transforms.ToTensor()])
     # create base dataset
-    dataset = BaseDataset(image_folder=args.image_folder, gt_folder=args.gt_folder)
+    dataset = BaseDataset(image_folders=args.image_folders, gt_folders=args.gt_folders)
     # seed for reproducibility
     set_seeds()
     # split the dataset into train and validation sets
