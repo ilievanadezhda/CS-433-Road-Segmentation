@@ -1,5 +1,4 @@
 import numpy as np
-import yaml
 import argparse
 from omegaconf import OmegaConf
 import wandb
@@ -76,11 +75,11 @@ def prepare_transforms(args):
     gt_transform.append(transforms.ToTensor())
     # normalization
     if args.normalization:
-        mean = [0.3353, 0.3328, 0.2984]
-        std = [0.1967, 0.1896, 0.1897]
-        print(
-            f"Using Normalize with mean={mean} and std={std}."
-        )
+        mean = [0.3580, 0.3650, 0.3316]
+        std = [0.1976, 0.1917, 0.1940]
+        # mean = [0.3353, 0.3328, 0.2984]
+        # std = [0.1967, 0.1896, 0.1897]
+        print(f"Using Normalize with mean={mean} and std={std}.")
         image_transform.append(transforms.Normalize(mean=mean, std=std))
     # compose transforms
     # if there is no random transforms to be applied, set it to None
@@ -99,8 +98,10 @@ def prepare_data(args):
     random_transform, image_transform, gt_transform = prepare_transforms(args)
     # create image transform for validation set
     if args.normalization:
-        mean = [0.3353, 0.3328, 0.2984]
-        std = [0.1967, 0.1896, 0.1897]
+        mean = [0.3580, 0.3650, 0.3316]
+        std = [0.1976, 0.1917, 0.1940]
+        # mean = [0.3353, 0.3328, 0.2984]
+        # std = [0.1967, 0.1896, 0.1897]
         tt_transform_image = transforms.Compose(
             [
                 transforms.Resize((args.input_size, args.input_size)),
@@ -109,21 +110,32 @@ def prepare_data(args):
             ]
         )
     else:
-        tt_transform_image = transforms.Compose([transforms.Resize((args.input_size, args.input_size)), transforms.ToTensor()])
+        tt_transform_image = transforms.Compose(
+            [
+                transforms.Resize((args.input_size, args.input_size)),
+                transforms.ToTensor(),
+            ]
+        )
     # create groundtruth transform for validation set
-    tt_transform_gt = transforms.Compose([transforms.Resize((args.input_size, args.input_size)), transforms.ToTensor()])
+    tt_transform_gt = transforms.Compose(
+        [transforms.Resize((args.input_size, args.input_size)), transforms.ToTensor()]
+    )
     # create base dataset
     dataset = BaseDataset(image_folders=args.image_folders, gt_folders=args.gt_folders)
     # seed for reproducibility
     set_seeds()
-    # split the dataset into train and validation sets
+
+    # split dataset into train and validation sets
+    total_length = len(dataset)
+    train_length = int(args.train_size * total_length)
+    val_length = (
+        total_length - train_length
+    )  # adjust validation length to avoid rounding issues
+
     train_set, val_set = torch.utils.data.random_split(
-        dataset,
-        [
-            int(args.train_size * len(dataset)),
-            int(args.val_size * len(dataset))
-        ],
+        dataset, [train_length, val_length]
     )
+
     # apply transforms
     train_set = TransformDataset(
         train_set,

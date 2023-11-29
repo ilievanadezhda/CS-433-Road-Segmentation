@@ -10,8 +10,20 @@ class BaseDataset(Dataset):
         self.gt_folders = gt_folders
 
         # list the file names of images and ground truths
-        self.image_files = sorted([os.path.join(image_folder, file) for image_folder in image_folders for file in os.listdir(image_folder)])
-        self.gt_files = sorted([os.path.join(gt_folder, file) for gt_folder in gt_folders for file in os.listdir(gt_folder)])
+        self.image_files = sorted(
+            [
+                os.path.join(image_folder, file)
+                for image_folder in image_folders
+                for file in os.listdir(image_folder)
+            ]
+        )
+        self.gt_files = sorted(
+            [
+                os.path.join(gt_folder, file)
+                for gt_folder in gt_folders
+                for file in os.listdir(gt_folder)
+            ]
+        )
 
         # ensure that the two lists have the same length
         assert len(self.image_files) == len(self.gt_files)

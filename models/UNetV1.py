@@ -11,7 +11,7 @@ class UNetV1(nn.Module):
         self.model = torch.hub.load(
             "milesial/Pytorch-UNet", "unet_carvana", pretrained=pretrained, scale=scale
         )
-        # Change the output layer to 1 channel
+        # Change the output layer to 1 channel instead of 2
         self.model.outc = nn.Conv2d(64, 1, kernel_size=(1, 1), stride=(1, 1))
 
     def forward(self, x):

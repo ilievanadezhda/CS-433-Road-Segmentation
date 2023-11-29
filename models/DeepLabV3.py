@@ -7,7 +7,7 @@ import torchvision.models.segmentation as models
 class ResNet101(nn.Module):
     def __init__(self, weights=None):
         super().__init__()
-        # Load the model from
+        # load the model from PyTorch torchvision
         self.model = models.deeplabv3_resnet101(num_classes=1, weights=weights)
 
     def forward(self, x):

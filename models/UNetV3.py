@@ -1,20 +1,20 @@
-""" Wrapper class for brain-segmentation-pytorch (unet) by mateuszbuda. 
-    Original code can be found at: https://github.com/mateuszbuda/brain-segmentation-pytorch"""
-import torch
+""" Wrapper class for unet model from segmentation_models_pytorch library 
+    Model can be found: https://segmentation-modelspytorch.readthedocs.io/en/latest/docs/api.html#unet """
 import torch.nn as nn
 import segmentation_models_pytorch as smp
 
 
 class UNetV3(nn.Module):
+    # activation is none since we are using BCEWithLogitsLoss
     def __init__(
         self,
-        encoder="efficientnet-b5",
+        encoder="resnet50",
         encoder_weights="imagenet",
         classes=1,
         activation=None,
     ):
         super().__init__()
-        # Load the model from Torch Hub
+        # load model from segmentation_models_pytorch library
         self.model = smp.Unet(
             encoder_name=encoder,
             encoder_weights=encoder_weights,
