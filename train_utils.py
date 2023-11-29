@@ -212,10 +212,10 @@ def step_loader(loader, n_steps=-1):
                 return
 
 
-def calculate_metrics(preds, labels):
+def calculate_metrics(preds, labels, threshold=0.5):
     smooth = 1e-6
     preds = torch.sigmoid(preds)
-    preds = (preds > 0.5).float()
+    preds = (preds > threshold).float()
     # Pixel Accuracy
     pixel_accuracy = (preds == labels).sum().item() / (labels.numel() + smooth)
 
