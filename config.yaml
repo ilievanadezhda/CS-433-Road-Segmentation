@@ -1,8 +1,10 @@
 # General
 seed=0,
 # Data folders
-image_folders=['datasets/train/images/'],
-gt_folders=['datasets/train/groundtruth/'],
+train_image_folders=["datasets/train/images/"], # add Massachusetts here
+train_gt_folders=["datasets/train/groundtruth/"], # add Massachusetts here
+val_image_folders=["datasets/validation/images/"], 
+val_gt_folders=["datasets/validation/groundtruth/"],
 # Data tranforms
 # random_resized_crop: crop a random portion of image and resize it to a given size
 random_resized_crop=False,

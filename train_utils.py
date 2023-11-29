@@ -120,22 +120,10 @@ def prepare_data(args):
     tt_transform_gt = transforms.Compose(
         [transforms.Resize((args.input_size, args.input_size)), transforms.ToTensor()]
     )
-    # create base dataset
-    dataset = BaseDataset(image_folders=args.image_folders, gt_folders=args.gt_folders)
-    # seed for reproducibility
-    set_seeds()
-
-    # split dataset into train and validation sets
-    total_length = len(dataset)
-    train_length = int(args.train_size * total_length)
-    val_length = (
-        total_length - train_length
-    )  # adjust validation length to avoid rounding issues
-
-    train_set, val_set = torch.utils.data.random_split(
-        dataset, [train_length, val_length]
-    )
-
+    # load train set
+    train_set = BaseDataset(image_folders=args.train_image_folders, gt_folders=args.train_gt_folders)
+    # load validation set
+    val_set = BaseDataset(image_folders=args.val_image_folders, gt_folders=args.val_gt_folders)
     # apply transforms
     train_set = TransformDataset(
         train_set,
