@@ -337,7 +337,7 @@ def prepare_sampler():
     # weights for each dataset
     weights = {'satImage': 1/80, 'massachusetts_384': 1/1333}
     # create samples weight array
-    samples_weight = np.array([weights['satImage']]*counts['satImage'] + [weights['massachusetts_384']]*counts['massachusetts_384'])
+    samples_weight = np.array([weights['massachusetts_384']]*counts['massachusetts_384'] + [weights['satImage']]*counts['satImage'])
     # convert to tensor
     samples_weight = torch.from_numpy(samples_weight)
     # create sampler
