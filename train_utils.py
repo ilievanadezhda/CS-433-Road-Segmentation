@@ -1,7 +1,7 @@
 import numpy as np
-import argparse
 from omegaconf import OmegaConf
 import wandb
+import random
 import torch
 import torchvision.transforms.v2 as transforms
 from models.UNetV1 import UNetV1
@@ -10,7 +10,7 @@ from models.UNetV3 import UNetV3
 from models.DeepLabV3 import ResNet101
 from datasets.BaseDataset import BaseDataset
 from datasets.TransformDataset import TransformDataset
-import random
+from torch.utils.data import WeightedRandomSampler
 
 
 # set seeds as function
@@ -138,9 +138,16 @@ def prepare_data(args):
         gt_transform=tt_transform_gt,
     )
     # create data loaders
-    train_loader = torch.utils.data.DataLoader(
-        train_set, batch_size=args.batch_size, shuffle=True
-    )
+    if len(args.train_image_folders) > 1:
+        # use sampler (if massachusetts dataset is used)
+        print("Using WeightedRandomSampler.")
+        train_loader = torch.utils.data.DataLoader(
+            train_set, batch_size=args.batch_size, sampler=prepare_sampler()
+        )
+    else:
+        train_loader = torch.utils.data.DataLoader(
+            train_set, batch_size=args.batch_size, shuffle=True
+        )
     val_loader = torch.utils.data.DataLoader(
         val_set, batch_size=args.batch_size, shuffle=True
     )
@@ -170,7 +177,6 @@ def prepare_model(args):
     elif args.model_name == "UNetV3":
         print("Initializing UNetV3 model.")
         model = UNetV3()
-    # ADD MODELS HERE!
     return model
 
 
@@ -235,7 +241,7 @@ def train(model, device, train_loader, val_loader, criterion, optimizer, args):
         config=config_dict,
         entity=args.entity,
     )
-    # Upload the configuration file to WandB
+    # upload the configuration file to WandB
     wandb.config.update(config_dict)
     best_iou_score = 0.0
     # training loop
@@ -260,7 +266,6 @@ def train(model, device, train_loader, val_loader, criterion, optimizer, args):
             },
             step=step,
         )
-        # TODO
         # validation
         if step % args.eval_freq == 0:
             model.eval()
@@ -298,7 +303,7 @@ def train(model, device, train_loader, val_loader, criterion, optimizer, args):
                 },
                 step=step,
             )
-            # Save the model if this is the best F1 score so far
+            # save the model if this is the best F1 score so far
             if avg_iou > best_iou_score:
                 best_iou_score = avg_iou
                 torch.save(model.state_dict(), args.model_save_name)
@@ -324,3 +329,18 @@ def batch_mean_and_sd(loader):
 
     mean, std = fst_moment, torch.sqrt(snd_moment - fst_moment**2)
     return mean, std
+
+
+def prepare_sampler():
+    # number of samples in each dataset
+    counts = {'satImage': 80, 'massachusetts_384': 1333}
+    # weights for each dataset
+    weights = {'satImage': 1/80, 'massachusetts_384': 1/1333}
+    # create samples weight array
+    samples_weight = np.array([weights['satImage']]*counts['satImage'] + [weights['massachusetts_384']]*counts['massachusetts_384'])
+    # convert to tensor
+    samples_weight = torch.from_numpy(samples_weight)
+    # create sampler
+    sampler = WeightedRandomSampler(samples_weight.type('torch.DoubleTensor'), len(samples_weight))
+    # return sampler
+    return sampler
