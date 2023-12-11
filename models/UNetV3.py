@@ -8,7 +8,7 @@ class UNetV3(nn.Module):
     # activation is none since we are using BCEWithLogitsLoss
     def __init__(
         self,
-        encoder="resnet50",
+        encoder="efficientnet-b3",
         encoder_weights="imagenet",
         classes=1,
         activation=None,

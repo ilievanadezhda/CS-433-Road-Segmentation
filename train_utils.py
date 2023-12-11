@@ -7,7 +7,7 @@ import torchvision.transforms.v2 as transforms
 from models.UNetV1 import UNetV1
 from models.UNetV2 import UNetV2
 from models.UNetV3 import UNetV3
-from models.DeepLabV3 import ResNet101
+from models.DeepLabV3 import ResNet50
 from datasets.BaseDataset import BaseDataset
 from datasets.TransformDataset import TransformDataset
 from torch.utils.data import WeightedRandomSampler
@@ -77,6 +77,8 @@ def prepare_transforms(args):
     if args.normalization:
         mean = [0.3580, 0.3650, 0.3316]
         std = [0.1976, 0.1917, 0.1940]
+        # mean = [0.5268, 0.5174, 0.4892]  # kaggle + aicrowd
+        # std = [0.1967, 0.1894, 0.1867]  # kaggle + aicrowd
         # mean = [0.3353, 0.3328, 0.2984]
         # std = [0.1967, 0.1896, 0.1897]
         print(f"Using Normalize with mean={mean} and std={std}.")
@@ -102,6 +104,7 @@ def prepare_data(args):
         std = [0.1976, 0.1917, 0.1940]
         # mean = [0.3353, 0.3328, 0.2984]
         # std = [0.1967, 0.1896, 0.1897]
+
         tt_transform_image = transforms.Compose(
             [
                 transforms.Resize((args.input_size, args.input_size)),
@@ -121,9 +124,13 @@ def prepare_data(args):
         [transforms.Resize((args.input_size, args.input_size)), transforms.ToTensor()]
     )
     # load train set
-    train_set = BaseDataset(image_folders=args.train_image_folders, gt_folders=args.train_gt_folders)
+    train_set = BaseDataset(
+        image_folders=args.train_image_folders, gt_folders=args.train_gt_folders
+    )
     # load validation set
-    val_set = BaseDataset(image_folders=args.val_image_folders, gt_folders=args.val_gt_folders)
+    val_set = BaseDataset(
+        image_folders=args.val_image_folders, gt_folders=args.val_gt_folders
+    )
     # apply transforms
     train_set = TransformDataset(
         train_set,
@@ -142,7 +149,9 @@ def prepare_data(args):
         # use sampler (if massachusetts dataset is used)
         print("Using WeightedRandomSampler.")
         train_loader = torch.utils.data.DataLoader(
-            train_set, batch_size=args.batch_size, sampler=prepare_sampler()
+            train_set,
+            batch_size=args.batch_size,
+            shuffle=True,  # sampler = prepare_sampler(),
         )
     else:
         train_loader = torch.utils.data.DataLoader(
@@ -171,12 +180,13 @@ def prepare_model(args):
             init_features=args.model_init_features,
             pretrained=args.model_pretrained,
         )
-    elif args.model_name == "ResNet101":
-        print("Initializing ResNet101 model.")
-        model = ResNet101()
+    elif args.model_name == "ResNet50":
+        print("Initializing ResNet50 model.")
+        model = ResNet50()
     elif args.model_name == "UNetV3":
         print("Initializing UNetV3 model.")
         model = UNetV3()
+
     return model
 
 
@@ -333,14 +343,19 @@ def batch_mean_and_sd(loader):
 
 def prepare_sampler():
     # number of samples in each dataset
-    counts = {'satImage': 80, 'massachusetts_384': 1333}
+    counts = {"satImage": 80, "massachusetts_384": 1333}
     # weights for each dataset
-    weights = {'satImage': 1/80, 'massachusetts_384': 1/1333}
+    weights = {"satImage": 1 / 80, "massachusetts_384": 1 / 1333}
     # create samples weight array
-    samples_weight = np.array([weights['massachusetts_384']]*counts['massachusetts_384'] + [weights['satImage']]*counts['satImage'])
+    samples_weight = np.array(
+        [weights["massachusetts_384"]] * counts["massachusetts_384"]
+        + [weights["satImage"]] * counts["satImage"]
+    )
     # convert to tensor
     samples_weight = torch.from_numpy(samples_weight)
     # create sampler
-    sampler = WeightedRandomSampler(samples_weight.type('torch.DoubleTensor'), len(samples_weight))
+    sampler = WeightedRandomSampler(
+        samples_weight.type("torch.DoubleTensor"), len(samples_weight)
+    )
     # return sampler
     return sampler
