@@ -5,6 +5,7 @@ train_image_folders=["datasets/train/images/"], # add Massachusetts here
 train_gt_folders=["datasets/train/groundtruth/"], # add Massachusetts here
 val_image_folders=["datasets/validation/images/"], 
 val_gt_folders=["datasets/validation/groundtruth/"],
+weighted_random_sampler=False,
 # Data tranforms
 # random_resized_crop: crop a random portion of image and resize it to a given size
 random_resized_crop=False,
@@ -25,6 +26,7 @@ saturation=0.1,  # how much to jitter saturation.
 hue=0.1,  # how much to jitter hue.
 # normalization
 normalization=True,  # TODO: Should it always be True?
+normalization_flag = "A", # "A" for AIcrowd, "AM" for AIcrowd + Massachusetts, "AK" for AIcrowd + Kaggle
 # Data loaders
 batch_size=4,
 train_size=0.8,
