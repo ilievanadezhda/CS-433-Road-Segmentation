@@ -1,7 +1,6 @@
 import numpy as np
 from omegaconf import OmegaConf
 import wandb
-import random
 import torch
 import torchvision.transforms.v2 as transforms
 from models.UNetV1 import UNetV1
@@ -11,19 +10,21 @@ from models.DeepLabV3 import ResNet50
 from datasets.BaseDataset import BaseDataset
 from datasets.TransformDataset import TransformDataset
 from torch.utils.data import WeightedRandomSampler
-
-
-# set seeds as function
-def set_seeds(seed=42):
-    random.seed(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed(seed)
+from utils import step_loader, calculate_metrics
 
 
 def prepare_transforms(args):
-    # prepare random transform (to be applied at the same time to both image and groundtruth, for consistency).
-    # the goal is to avoid scenarios like flipping the image but not the groundtruth.
+    """ Prepare transforms for image and groundtruth.
+
+    Args:
+        args : arguments from config dictionary
+
+    Returns:
+        random_transform : random transform to be applied at the same time to both image and groundtruth
+        image_transform : transform to be applied to image only
+        gt_transform : transform to be applied to groundtruth only
+    """
+    # prepare random transform (to be applied at the same time to both image and groundtruth)
     random_transform = []
     # random resized crop
     if args.random_resized_crop:
@@ -48,8 +49,7 @@ def prepare_transforms(args):
     if args.random_rotation:
         print(f"Using RandomRotation with degrees={args.degrees}.")
         random_transform.append(transforms.RandomRotation(degrees=args.degrees))
-    # prepare additional transforms for image and groundtruth (these do not need to be applied at the same time)
-    # the goal is to allow some flexibility in the transforms applied to the image and groundtruth, e.g. color jitter for image only.
+    # prepare image and groundtruth transforms
     image_transform = []
     gt_transform = []
     # color jitter (for image only)
@@ -75,17 +75,12 @@ def prepare_transforms(args):
     gt_transform.append(transforms.ToTensor())
     # normalization
     if args.normalization:
-        mean = [0.3580, 0.3650, 0.3316]
-        std = [0.1976, 0.1917, 0.1940]
-        # mean = [0.5268, 0.5174, 0.4892]  # kaggle + aicrowd
-        # std = [0.1967, 0.1894, 0.1867]  # kaggle + aicrowd
-        # mean = [0.3353, 0.3328, 0.2984]
-        # std = [0.1967, 0.1896, 0.1897]
+        mean, std = prepare_normalization(args.normalization_flag)
         print(f"Using Normalize with mean={mean} and std={std}.")
         image_transform.append(transforms.Normalize(mean=mean, std=std))
     # compose transforms
-    # if there is no random transforms to be applied, set it to None
     if random_transform == []:
+        # if there is no random transforms to be applied, set it to None
         random_transform = None
     else:
         random_transform = transforms.Compose(random_transform)
@@ -95,16 +90,74 @@ def prepare_transforms(args):
     return random_transform, image_transform, gt_transform
 
 
+def prepare_normalization(normalization_flag):
+    """ Prepare normalization parameters.
+
+    Args:
+        normalization_flag: normalization flag to indicate which datasets are used. 
+            "A": AIcrowd dataset only
+            "AM": AIcrowd + Massachusetts dataset
+            "AK": AIcrowd + Kaggle dataset
+
+    Returns:
+        mean: mean for normalization
+        std: standard deviation for normalization
+    """
+    if normalization_flag == "A":
+        # AIcrowd dataset only
+        mean = [0.3353, 0.3328, 0.2984]
+        std = [0.1967, 0.1896, 0.1897]
+    elif normalization_flag == "AM":
+        # AIcrowd + Massachusetts dataset
+        mean = [0.3580, 0.3650, 0.3316]
+        std = [0.1976, 0.1917, 0.1940]
+    elif normalization_flag == "AK":
+        # AIcrowd + Kaggle dataset
+        mean = [0.5268, 0.5174, 0.4892]
+        std = [0.1967, 0.1894, 0.1867]
+    return mean, std
+
+
+def prepare_sampler():
+    """ Prepare weighted random sampler for training. 
+
+    Returns:
+        sampler: sampler for training
+    """
+    # number of samples in each dataset
+    counts = {"satImage": 80, "massachusetts_384": 1333}
+    # weights for each dataset
+    weights = {"satImage": 1 / 80, "massachusetts_384": 1 / 1333}
+    # create samples weight array
+    samples_weight = np.array(
+        [weights["massachusetts_384"]] * counts["massachusetts_384"]
+        + [weights["satImage"]] * counts["satImage"]
+    )
+    # convert to tensor
+    samples_weight = torch.from_numpy(samples_weight)
+    # create sampler
+    sampler = WeightedRandomSampler(
+        samples_weight.type("torch.DoubleTensor"), len(samples_weight)
+    )
+    # return sampler
+    return sampler
+
+
 def prepare_data(args):
+    """ Prepare data loaders for training and validation.
+
+    Args:
+        args : arguments from config dictionary
+
+    Returns:
+        train_loader : data loader for training set
+        val_loader : data loader for validation set
+    """
     # get image and groundtruth transforms (for train set)
     random_transform, image_transform, gt_transform = prepare_transforms(args)
     # create image transform for validation set
     if args.normalization:
-        mean = [0.3580, 0.3650, 0.3316]
-        std = [0.1976, 0.1917, 0.1940]
-        # mean = [0.3353, 0.3328, 0.2984]
-        # std = [0.1967, 0.1896, 0.1897]
-
+        mean, std = prepare_normalization(args.normalization_flag)
         tt_transform_image = transforms.Compose(
             [
                 transforms.Resize((args.input_size, args.input_size)),
@@ -145,13 +198,13 @@ def prepare_data(args):
         gt_transform=tt_transform_gt,
     )
     # create data loaders
-    if len(args.train_image_folders) > 1:
-        # use sampler (if massachusetts dataset is used)
+    if len(args.train_image_folders) > 1 and args.weighted_random_sampler:
+        # use sampler
         print("Using WeightedRandomSampler.")
         train_loader = torch.utils.data.DataLoader(
             train_set,
             batch_size=args.batch_size,
-            shuffle=True,  # sampler = prepare_sampler(),
+            sampler = prepare_sampler(),
         )
     else:
         train_loader = torch.utils.data.DataLoader(
@@ -165,6 +218,14 @@ def prepare_data(args):
 
 
 def prepare_model(args):
+    """ Prepare model for training.
+
+    Args:
+        args : arguments from config dictionary
+
+    Returns:
+        model : model for training
+    """
     if args.model_name == "UNetV1":
         print(
             f"Initializing UNetV1 model with pretrained={args.model_pretrained}, scale={args.model_scale}."
@@ -191,6 +252,15 @@ def prepare_model(args):
 
 
 def prepare_optimizer(model, args):
+    """ Prepare optimizer for training.
+
+    Args:
+        model : model for training
+        args : arguments from config dictionary
+
+    Returns:
+        optimizer : optimizer for training
+    """
     if args.optim_name == "sgd":
         print(
             f"Initializing SGD optimizer with lr={args.optim_lr}, momentum={args.optim_momentum}."
@@ -204,45 +274,21 @@ def prepare_optimizer(model, args):
     return optimizer
 
 
-def step_loader(loader, n_steps=-1):
-    # creates infinite loader for training (
-    # use as metric n_steps instead of n_epochs
-    step = 0
-    while True:
-        for batch in loader:
-            yield step, batch
-            step += 1
-            if step == n_steps:
-                return
-
-
-def calculate_metrics(preds, labels, threshold=0.5):
-    smooth = 1e-6
-    preds = torch.sigmoid(preds)
-    preds = (preds > threshold).float()
-    # Pixel Accuracy
-    pixel_accuracy = (preds == labels).sum().item() / (labels.numel() + smooth)
-
-    # Intersection-Over-Union (IoU)
-    intersection = (preds * labels).sum()
-    union = preds.sum() + labels.sum() - intersection
-    iou = (intersection + smooth) / (union + smooth)
-
-    # Precision and Recall for F1 Score
-    true_positives = (preds * labels).sum()
-    predicted_positives = preds.sum()
-    actual_positives = labels.sum()
-
-    precision = true_positives / (predicted_positives + smooth)
-    recall = true_positives / (actual_positives + smooth)
-
-    # F1 Score
-    f1_score = 2 * (precision * recall) / (precision + recall + smooth)
-
-    return pixel_accuracy, iou.item(), f1_score.item()
-
-
 def train(model, device, train_loader, val_loader, criterion, optimizer, args):
+    """ Training loop.
+
+    Args:
+        model: model for training
+        device: device to use
+        train_loader: data loader for training set
+        val_loader: data loader for validation set
+        criterion: loss function
+        optimizer: optimizer for training
+        args: arguments from config dictionary
+
+    Returns:
+        model: trained model
+    """
     # set up WandB for logging
     config_dict = OmegaConf.to_container(args, resolve=True)
     wandb.init(
@@ -320,42 +366,3 @@ def train(model, device, train_loader, val_loader, criterion, optimizer, args):
                 print("Best model saved at step: ", step)
 
     return model
-
-
-# calculate mean and std of dataset
-def batch_mean_and_sd(loader):
-    cnt = 0
-    fst_moment = torch.empty(3)
-    snd_moment = torch.empty(3)
-
-    for images, _ in loader:
-        b, c, h, w = images.shape
-        nb_pixels = b * h * w
-        sum_ = torch.sum(images, dim=[0, 2, 3])
-        sum_of_square = torch.sum(images**2, dim=[0, 2, 3])
-        fst_moment = (cnt * fst_moment + sum_) / (cnt + nb_pixels)
-        snd_moment = (cnt * snd_moment + sum_of_square) / (cnt + nb_pixels)
-        cnt += nb_pixels
-
-    mean, std = fst_moment, torch.sqrt(snd_moment - fst_moment**2)
-    return mean, std
-
-
-def prepare_sampler():
-    # number of samples in each dataset
-    counts = {"satImage": 80, "massachusetts_384": 1333}
-    # weights for each dataset
-    weights = {"satImage": 1 / 80, "massachusetts_384": 1 / 1333}
-    # create samples weight array
-    samples_weight = np.array(
-        [weights["massachusetts_384"]] * counts["massachusetts_384"]
-        + [weights["satImage"]] * counts["satImage"]
-    )
-    # convert to tensor
-    samples_weight = torch.from_numpy(samples_weight)
-    # create sampler
-    sampler = WeightedRandomSampler(
-        samples_weight.type("torch.DoubleTensor"), len(samples_weight)
-    )
-    # return sampler
-    return sampler
