@@ -4,13 +4,13 @@
 In the evolving landscape of digital image processing and computer vision, our project focuses on road segmentation from satellite images. We leverage state-of-the-art architectures like U-Net and DeepLabV3 for effective image segmentation.
 
 ## Models
-### DeepLabV3 (ResNet101)
-- **File**: [models/deeplabv3.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/DeepLabV3.py) - Wrapper class for deeplabv3_resnet50 by PyTorch. 
+#### DeepLabV3 (ResNet101)
+- **File**: Wrapper class for deeplabv3_resnet50 by PyTorch. Located: [models/deeplabv3.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/DeepLabV3.py) 
 - **Notebook**: [notebook/deeplab-v3.ipynb](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/notebooks/deeplab-v3.ipynb)
 - **Description**: Implements the DeepLabV3 model with a ResNet50 backbone.
 
-### UNet Variants
-- **Files**: [models/UNetV1.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/UNetV1.py), [models/UNetV2.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/UNetV2.py), [models/UNetV3.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/UNetV3.py) - Wrapper classes for each UNet.
+#### UNet Variants
+- **Files**: Wrapper classes for each UNet. Located: [models/UNetV1.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/UNetV1.py), [models/UNetV2.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/UNetV2.py), [models/UNetV3.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/UNetV3.py) 
 - **Notebooks** [notebooks/unet-v1.ipynb](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/notebooks/unet-v1.ipynb), [notebooks/unet-v2.ipynb](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/notebooks/unet-v2.ipynb), [notebooks/unet-v3.ipynb](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/notebooks/unet-v3.ipynb)
 - **Description**: Different versions of the UNet model, each tailored for road segmentation. Implementation shown in notebooks.
 
@@ -23,9 +23,10 @@ In the evolving landscape of digital image processing and computer vision, our p
 - **Requirements**: Python 3.x, PyTorch, torchvision, timm, matplotlib, omegaconf, wandb
 - **Setup**: Run `pip install -r requirements.txt` to install dependencies. [View requirements](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/requirements.txt)
 
-## Configuration
-- **File**: [config.yaml](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/config.py)
-- **Description**: Contains settings for model parameters, training settings, and data paths.
+## Additional
+- **Configuration File**: Contains settings for model parameters, training settings, and data paths. [config.yaml](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/config.py)
+- **Postprocessing**: Contains postprocessing functions. [postprocessing.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/postprocessing.py)
+- **Utils**: Utility functions for training and evaluation. [train_utils.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/train_utils.py), [utils.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/utils.py)
 
 ## Usage
 - **Training**: To train reproduce the pipeline for training the best model execute:
@@ -35,9 +36,6 @@ In the evolving landscape of digital image processing and computer vision, our p
   ```bash
   python run.py
 
-## Evaluation
-- **Metric**: F1 Score
-- **Description**: The F1 Score is used to evaluate model performance, balancing precision and recall.
 
 ---
 
