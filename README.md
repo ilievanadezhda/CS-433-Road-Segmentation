@@ -4,12 +4,12 @@
 In the evolving landscape of digital image processing and computer vision, our project focuses on road segmentation from satellite images. We leverage state-of-the-art architectures like U-Net and DeepLabV3 for effective image segmentation.
 
 ## Models
-#### DeepLabV3 (ResNet101)
+#### DeepLabV3
 - **File**: Wrapper class for deeplabv3_resnet50 by PyTorch. Located: [models/deeplabv3.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/DeepLabV3.py) 
 - **Notebook**: [notebook/deeplab-v3.ipynb](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/notebooks/deeplab-v3.ipynb)
 - **Description**: Implements the DeepLabV3 model with a ResNet50 backbone.
 
-#### UNet Variants
+#### UNet(s)
 - **Files**: Wrapper classes for each UNet. Located: [models/UNetV1.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/UNetV1.py), [models/UNetV2.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/UNetV2.py), [models/UNetV3.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/UNetV3.py) 
 - **Notebooks** [notebooks/unet-v1.ipynb](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/notebooks/unet-v1.ipynb), [notebooks/unet-v2.ipynb](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/notebooks/unet-v2.ipynb), [notebooks/unet-v3.ipynb](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/notebooks/unet-v3.ipynb)
 - **Description**: Different versions of the UNet model, each tailored for road segmentation. Implementation shown in notebooks.
@@ -30,9 +30,9 @@ In the evolving landscape of digital image processing and computer vision, our p
 - **Baseline**: Modified `tf_aerial_images.py`, which demonstrates the use of a basic convolutional neural network in TensorFlow for generating a baseline. See [tf_aerial_images.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/examples/tf_aerial_images.py). In order to run this script you need to install tensorflow==2.11.0. In order to avoid environment conflicts we recommend you to create a new environment and install this dependency separately. 
 
 ## Usage
-- **Training**: To train reproduce the pipeline for training the best model execute:
+- **Training**: See [training_pipeline](), this script takes 12 hours to run on a NVIDIA GeForce RTX 3050 Ti (laptop version). To reproduce the best model checkpoint execute:
   ```bash
-  TODO
+  pyton training_pipeline.py
 - **Testing**: To reproduce the best result execute:
   ```bash
   python run.py
