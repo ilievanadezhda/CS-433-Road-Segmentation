@@ -20,7 +20,7 @@ In the evolving landscape of digital image processing and computer vision, road 
 4. **Kaggle Dataset**: 400x400 pixel images from Los Angeles, filtered for road presence. The original dataset was downloaded using Googlemaps API. See [notebook](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/notebooks/kaggle.ipynb) for preprocessing this dataset for our needs. [Link](https://www.kaggle.com/datasets/timothlaborie/roadsegmentation-boston-losangeles) to original dataset.
 
 ## Installation
-Note: This guide is for users who have anaconda or miniconda installed. If you are using a different tool for managing environments such as `venv` then skip steps [2-4] and create the environment following the [guideline](https://docs.python.org/3/library/venv.html)
+Note: This guide is for users who have anaconda or miniconda installed. If you are using a different tool for managing environments such as `venv` then skip steps [2-4] and create the environment following the appropriate [guideline].(https://docs.python.org/3/library/venv.html)
 1. Clone the repository:
    ```bash
    git clone ...
