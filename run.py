@@ -8,8 +8,12 @@ from examples.mask_to_submission import *
 from postprocessing import apply_morphological_operations
 from skimage.morphology import square, opening, erosion
 import warnings
+from utils import set_seeds
 
 warnings.filterwarnings("ignore")
+
+# set seeds
+set_seeds()
 
 
 def apply_morphological_operations(prediction):

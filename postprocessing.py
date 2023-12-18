@@ -1,3 +1,5 @@
+"""Postprocessing functions."""
+
 from skimage.morphology import (
     square,
     opening,

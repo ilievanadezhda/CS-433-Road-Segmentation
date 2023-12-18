@@ -1,3 +1,5 @@
+"""Training utilities."""
+
 import numpy as np
 from omegaconf import OmegaConf
 import wandb
@@ -368,5 +370,5 @@ def train(model, device, train_loader, val_loader, criterion, optimizer, args):
                 best_f1_score = avg_f1
                 torch.save(model.state_dict(), args.model_save_name)
                 print("Best model saved at step: ", step)
-
+    wandb.finish()
     return model

@@ -1,0 +1,58 @@
+seed: 0
+
+# data folders (only using the original dataset for retraining)
+train_image_folders:
+  - "datasets/train/images/"
+train_gt_folders:
+  - "datasets/train/groundtruth/"
+val_image_folders:
+  - "datasets/validation/images/"
+val_gt_folders:
+  - "datasets/validation/groundtruth/"
+
+weighted_random_sampler: False 
+
+# data transforms
+random_resized_crop: False
+output_size: [400, 400]
+input_size: 400
+random_resized_crop_scale: [0.5, 0.5]
+random_horizontal_flip: True
+random_vertical_flip: True
+random_rotation: True
+degrees: 10
+color_jitter: False
+brightness: 0.1
+contrast: 0.1
+saturation: 0.1
+hue: 0.1
+
+# normalization
+normalization: True
+normalization_flag: "A"
+
+# data loaders
+batch_size: 3
+train_size: 0.8
+val_size: 0.2
+
+# model settings
+model_name: "ResNet50"
+model_pretrained: False
+model_save_name: "models/checkpoints/deeplabv3_resnet50_best.pt"
+
+# optimizer settings
+optim_name: "adam"
+optim_lr: 0.00003
+optim_momentum: 0.9
+
+# training settings
+n_steps: 3000
+eval_freq: 100
+
+# wandb logging
+use_wandb: False  # set to True to enable wandb logging
+
+wandb_project: "road-segmentation-clahe"
+wandb_run: "deeplabv3-resnet50_best"
+entity: "feeit"

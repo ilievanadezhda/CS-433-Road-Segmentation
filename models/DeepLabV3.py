@@ -1,4 +1,4 @@
-""" Wrapper class for deeplabv3_resnet101 by PyTorch. 
+""" Wrapper class for deeplabv3_resnet50 by PyTorch. 
     Model can be found: 
     https://pytorch.org/vision/main/models/generated/torchvision.models.segmentation.deeplabv3_resnet50.html#torchvision.models.segmentation.DeepLabV3_ResNet50_Weights
 """
