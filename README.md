@@ -20,8 +20,19 @@ In the evolving landscape of digital image processing and computer vision, our p
 4. **Kaggle Dataset**: 400x400 pixel images from Los Angeles, filtered for road presence. The original dataset was downloaded using Googlemaps API. See [notebook](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/notebooks/kaggle.ipynb) for preprocessing this dataset for our needs. [Link](https://www.kaggle.com/datasets/timothlaborie/roadsegmentation-boston-losangeles) to original dataset.
 
 ## Installation
-- **Requirements**: Python 3.x, PyTorch, torchvision, timm, matplotlib, omegaconf, wandb
-- **Setup**: Run `pip install -r requirements.txt` to install dependencies. [View requirements](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/requirements.txt)
+1. Clone the repository:
+   ```bash
+   git clone ...
+   cd ...
+2. Create an environment using Python 3.8.18
+   ```bash
+   conda create --name road_segmentation python==3.8.18
+3. Activate the environment
+   ```bash
+   conda activate road_segmentaiton
+4. Install the required packages:
+   ``` bash
+   pip install -r requirements.txt
 
 ## Additional
 - **Configuration File**: Contains settings for model parameters, training settings, and data paths. [config.yaml](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/config.py)
