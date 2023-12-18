@@ -7,7 +7,7 @@ In the evolving landscape of digital image processing and computer vision, our p
 ### DeepLabV3 (ResNet101)
 - **File**: [models/deeplabv3.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/deeplabv3.py)
 - **Description**: Implements the DeepLabV3 model with a ResNet50 backbone.
-![deeplabv3](https://github.com/ilievanadezhda/Road-Segmentation-ML/assets/58995762/6e649170-859b-414e-873e-b0e73b129bc6)
+![deeplab_v3](https://github.com/ilievanadezhda/Road-Segmentation-ML/assets/58995762/3c621301-3465-43ef-ba65-192e055699c8)
 
 ### UNet Variants
 - **Files**: [models/unet_v1.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/unet_v1.py), [models/unet_v2.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/unet_v2.py), [models/unet_v3.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/unet_v3.py)
