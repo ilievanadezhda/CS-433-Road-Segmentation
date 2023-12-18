@@ -1,7 +1,7 @@
 # Road Segmentation in Satellite Images
 
 ## Overview
-In the evolving landscape of digital image processing and computer vision, our project focuses on road segmentation from satellite images. We leverage state-of-the-art architectures like U-Net and DeepLabV3 for effective image segmentation.
+In the evolving landscape of digital image processing and computer vision, road segmentation from satellite images stands as a challenging domain. Road segmentation is a process used in computer vision and image processing where the goal is to identify and isolate the parts of an image that represent roads. This project dives deep into the process of segmenting roads from satellite images. We leverage state-of-the-art architectures such as U-Net and DeepLabV3 for effective image segmentation.
 
 ## Models
 #### DeepLabV3
@@ -34,21 +34,41 @@ In the evolving landscape of digital image processing and computer vision, our p
    ``` bash
    pip install -r requirements.txt
 
+## Usage
+- **Training**: See [training_pipeline](), this script takes 12 hours to run on a NVIDIA GeForce RTX 3050 Ti (laptop version). To reproduce the best model checkpoint execute:
+  ```bash
+  pyton training_pipeline.py
+- **Testing**: For ease of use, we provide the best models' checkpoint. To reproduce the best result execute:
+  ```bash
+  python run.py
+
 ## Additional
 - **Configuration File**: Contains settings for model parameters, training settings, and data paths. [config.yaml](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/config.py)
 - **Postprocessing**: Contains postprocessing functions. [postprocessing.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/postprocessing.py)
 - **Utils**: Utility functions for training and evaluation. [train_utils.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/train_utils.py), [utils.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/utils.py)
 - **Baseline**: Modified `tf_aerial_images.py`, which demonstrates the use of a basic convolutional neural network in TensorFlow for generating a baseline. See [tf_aerial_images.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/examples/tf_aerial_images.py). In order to run this script you need to install tensorflow==2.11.0. To avoid environment conflicts we recommend you to create a new environment and install this dependency separately. 
 
-## Usage
-- **Training**: See [training_pipeline](), this script takes 12 hours to run on a NVIDIA GeForce RTX 3050 Ti (laptop version). To reproduce the best model checkpoint execute:
-  ```bash
-  pyton training_pipeline.py
-- **Testing**: To reproduce the best result execute:
-  ```bash
-  python run.py
+## Ethical Considerations
+
+In the development and application of our road segmentation project, we recognize the importance of addressing ethical concerns. This section highlights key areas of focus and our recommendations for responsible use.
+
+#### Bias and Inaccuracy
+
+- **Description**: Machine learning models, including those used in road segmentation, can inherit biases present in their training data. This can lead to inaccuracies, particularly in underrepresented areas, affecting the model's performance and fairness.
+- **Mitigation Strategies**: 
+  - **Diverse Data Sets**: We recommend using diverse and comprehensive datasets that represent various geographical and environmental conditions to minimize bias.
+  - **Continuous Evaluation**: Regularly evaluate and update the model to ensure it remains accurate and fair across different regions and conditions.
+
+#### Surveillance and Misuse
+
+- **Description**: There is a potential risk that road segmentation technology could be used for surveillance purposes or other forms of misuse, especially if integrated with real-time monitoring systems.
+- **Mitigation Strategies**:
+  - **Ethical Usage Guidelines**: We advocate for the establishment of clear ethical guidelines governing the use of road segmentation technology, particularly in sensitive applications.
+
+#### Conclusion
+
+We are committed to the responsible development and use of AI technologies. We encourage users of our road segmentation project to consider these ethical aspects and to apply the technology in a manner that respects privacy and promotes fairness and safety.
+
 
 
 ---
-
-Note: For specific implementation details, refer to the comments and documentation within each code file.
