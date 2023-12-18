@@ -1,54 +1,44 @@
-# Road-Segmentation-ML
+# Road Segmentation in Satellite Images
 
 ## Overview
-"Road-Segmentation-ML" is a machine learning project aimed at segmenting roads in satellite images using deep learning techniques. The project implements various models to accurately classify each pixel in an image as road or non-road.
+In the evolving landscape of digital image processing and computer vision, our project focuses on road segmentation from satellite images. We leverage state-of-the-art architectures like U-Net and DeepLabV3 for effective image segmentation.
 
 ## Models
-This project includes several deep learning models, each with its unique approach to the segmentation task:
-
 ### DeepLabV3 (ResNet101)
-- **File**: `models/deeplabv3.py`
-- **Description**: Implements the DeepLabV3 model with a ResNet101 backbone.
-- **Main Function**: Provides a robust framework for pixel-level image segmentation.
+- **File**: [models/deeplabv3.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/deeplabv3.py)
+- **Description**: Implements the DeepLabV3 model with a ResNet50 backbone.
+![deeplab_v3](https://github.com/ilievanadezhda/Road-Segmentation-ML/assets/58995762/3c621301-3465-43ef-ba65-192e055699c8)
 
 ### UNet Variants
-- **Files**: `models/unet_v1.py`, `models/unet_v2.py`, `models/unet_v3.py`
-- **Description**: These files contain different versions of the UNet model, each tailored for road segmentation.
-- **Main Function**: UNet models are designed for biomedical image segmentation but are adapted here for high-resolution satellite image segmentation, offering precise pixel classification.
+- **Files**: [models/unet_v1.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/unet_v1.py), [models/unet_v2.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/unet_v2.py), [models/unet_v3.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/unet_v3.py)
+- **Description**: Different versions of the UNet model, each tailored for road segmentation.
+![unet](https://github.com/ilievanadezhda/Road-Segmentation-ML/assets/58995762/892d35e0-216b-4122-9613-d78076422751)
 
-## Dataset
-- **Description**: The dataset comprises high-resolution satellite images with corresponding labeled images marking roads.
-- **Source**: [AICrowd Road Segmentation Challenge](https://www.aicrowd.com/challenges/epfl-ml-road-segmentation)
-- **Usage**: Used for training and evaluating the models, providing a benchmark for segmentation accuracy.
+## Datasets
+1. **AIcrowd Dataset**: High-resolution satellite images with labeled roads.
+2. **Massachusetts Roads Dataset**: 1500x1500 pixel images, segmented into smaller parts.
+3. **Kaggle Dataset**: 400x400 pixel images from Los Angeles, filtered for road presence.
 
 ## Installation
 - **Requirements**: Python 3.x, PyTorch, torchvision, timm, matplotlib, omegaconf, wandb
-- **Setup**: Run `pip install -r requirements.txt` to install dependencies.
+- **Setup**: Run `pip install -r requirements.txt` to install dependencies. [View requirements](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/requirements.txt)
 
 ## Configuration
-- **File**: `config.yaml`
-- **Description**: Contains configuration settings for the project, including model parameters, training settings, and data paths.
-- **Usage**: Customize the training and model parameters by editing this file.
+- **File**: [config.yaml](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/config.py)
+- **Description**: Contains settings for model parameters, training settings, and data paths.
 
-## Jupyter Notebooks
-These notebooks provide practical examples and visualizations:
-
-### DeepLabV3 Notebook
-- **File**: `deeplab-v3.ipynb`
-- **Purpose**: Demonstrates the application of the DeepLabV3 model on the dataset.
-
-### UNet Notebooks
-- **Files**: `unet-v1.ipynb`, `unet-v2.ipynb`, `unet-v3.ipynb`
-- **Purpose**: Showcases the usage and performance of different UNet variants.
-
-### Visualization Notebook
-- **File**: `visualization.ipynb`
-- **Purpose**: Used for visualizing the segmentation results, comparing ground truth with predictions.
+## Usage
+- **Training**: To train reproduce the pipeline for training the best model execute:
+  ```bash
+  pyhon train.py
+- **Testing**: To reproduce the best result execute:
+  ```bash
+  python run.py
 
 ## Evaluation
 - **Metric**: F1 Score
-- **Description**: The F1 Score is used as the primary metric to evaluate the performance of the models, balancing precision and recall.
+- **Description**: The F1 Score is used to evaluate model performance, balancing precision and recall.
 
 ---
 
-Note: This README provides an overview of the project. For specific implementation details, refer to the comments and documentation within each code file.
+Note: For specific implementation details, refer to the comments and documentation within each code file.
