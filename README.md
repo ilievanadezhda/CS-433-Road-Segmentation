@@ -5,17 +5,19 @@ In the evolving landscape of digital image processing and computer vision, our p
 
 ## Models
 ### DeepLabV3 (ResNet101)
-- **File**: [models/deeplabv3.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/deeplabv3.py)
+- **File**: [models/deeplabv3.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/DeepLabV3.py) - Wrapper class for deeplabv3_resnet50 by PyTorch. 
+- **Notebook**: [notebook/deeplab-v3.ipynb](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/notebooks/deeplab-v3.ipynb)
 - **Description**: Implements the DeepLabV3 model with a ResNet50 backbone.
 
 ### UNet Variants
-- **Files**: [models/unet_v1.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/unet_v1.py), [models/unet_v2.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/unet_v2.py), [models/unet_v3.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/unet_v3.py)
-- **Description**: Different versions of the UNet model, each tailored for road segmentation.
+- **Files**: [models/UNetV1.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/UNetV1.py), [models/UNetV2.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/UNetV2.py), [models/UNetV3.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/UNetV3.py) - Wrapper classes for each UNet.
+- **Notebooks** [notebooks/unet-v1.ipynb](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/notebooks/unet-v1.ipynb), [notebooks/unet-v2.ipynb](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/notebooks/unet-v2.ipynb), [notebooks/unet-v3.ipynb](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/notebooks/unet-v3.ipynb)
+- **Description**: Different versions of the UNet model, each tailored for road segmentation. Implementation shown in notebooks.
 
 ## Datasets
 1. **AIcrowd Dataset**: High-resolution satellite images with labeled roads.
-2. **Massachusetts Roads Dataset**: 1500x1500 pixel images, segmented into smaller parts.
-3. **Kaggle Dataset**: 400x400 pixel images from Los Angeles, filtered for road presence.
+2. **Massachusetts Roads Dataset**: 1500x1500 pixel images, segmented into smaller parts. See [notebook](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/notebooks/massachusetts.ipynb) for preprocessing this dataset for our needs. 
+4. **Kaggle Dataset**: 400x400 pixel images from Los Angeles, filtered for road presence. See [notebook](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/notebooks/kaggle.ipynb) for preprocessing this dataset for our needs.
 
 ## Installation
 - **Requirements**: Python 3.x, PyTorch, torchvision, timm, matplotlib, omegaconf, wandb
@@ -28,7 +30,7 @@ In the evolving landscape of digital image processing and computer vision, our p
 ## Usage
 - **Training**: To train reproduce the pipeline for training the best model execute:
   ```bash
-  pyhon train.py
+  TODO
 - **Testing**: To reproduce the best result execute:
   ```bash
   python run.py
