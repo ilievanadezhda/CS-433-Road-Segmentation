@@ -7,10 +7,12 @@ In the evolving landscape of digital image processing and computer vision, our p
 ### DeepLabV3 (ResNet101)
 - **File**: [models/deeplabv3.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/deeplabv3.py)
 - **Description**: Implements the DeepLabV3 model with a ResNet50 backbone.
+![deeplabv3](https://github.com/ilievanadezhda/Road-Segmentation-ML/assets/58995762/6e649170-859b-414e-873e-b0e73b129bc6)
 
 ### UNet Variants
 - **Files**: [models/unet_v1.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/unet_v1.py), [models/unet_v2.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/unet_v2.py), [models/unet_v3.py](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/models/unet_v3.py)
 - **Description**: Different versions of the UNet model, each tailored for road segmentation.
+![unet](https://github.com/ilievanadezhda/Road-Segmentation-ML/assets/58995762/892d35e0-216b-4122-9613-d78076422751)
 
 ## Datasets
 1. **AIcrowd Dataset**: High-resolution satellite images with labeled roads.
