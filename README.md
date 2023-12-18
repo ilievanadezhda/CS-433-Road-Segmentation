@@ -1,25 +1,25 @@
 # Road-Segmentation-ML
 
 ## Overview
-"Road-Segmentation-ML" is a machine learning project aimed at segmenting roads in satellite images using deep learning techniques. The project implements various models to accurately classify each pixel in an image as road or non-road.
+"Road-Segmentation-ML" is a machine learning project aimed at segmenting roads in satellite images using deep learning techniques. In this project we implement various models to accurately classify each pixel in an image as road or non-road.
 
 ## Models
 This project includes several deep learning models, each with its unique approach to the segmentation task:
 
 ### DeepLabV3 (ResNet101)
 - **File**: `models/deeplabv3.py`
-- **Description**: Implements the DeepLabV3 model with a ResNet101 backbone.
-- **Main Function**: Provides a robust framework for pixel-level image segmentation.
+- **Description**: Implements the DeepLabV3 model with a ResNet50 backbone.
 
 ### UNet Variants
 - **Files**: `models/unet_v1.py`, `models/unet_v2.py`, `models/unet_v3.py`
 - **Description**: These files contain different versions of the UNet model, each tailored for road segmentation.
-- **Main Function**: UNet models are designed for biomedical image segmentation but are adapted here for high-resolution satellite image segmentation, offering precise pixel classification.
 
-## Dataset
+## Datasets
+1. AICrowd Dataset
 - **Description**: The dataset comprises high-resolution satellite images with corresponding labeled images marking roads.
 - **Source**: [AICrowd Road Segmentation Challenge](https://www.aicrowd.com/challenges/epfl-ml-road-segmentation)
 - **Usage**: Used for training and evaluating the models, providing a benchmark for segmentation accuracy.
+2. Massac
 
 ## Installation
 - **Requirements**: Python 3.x, PyTorch, torchvision, timm, matplotlib, omegaconf, wandb
