@@ -16,8 +16,8 @@ In the evolving landscape of digital image processing and computer vision, our p
 
 ## Datasets
 1. **AIcrowd Dataset**: High-resolution satellite images with labeled roads.
-2. **Massachusetts Roads Dataset**: 1500x1500 pixel images, segmented into smaller parts. See [notebook](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/notebooks/massachusetts.ipynb) for preprocessing this dataset for our needs. 
-4. **Kaggle Dataset**: 400x400 pixel images from Los Angeles, filtered for road presence. See [notebook](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/notebooks/kaggle.ipynb) for preprocessing this dataset for our needs.
+2. **Massachusetts Roads Dataset**: 1500x1500 pixel images, segmented into smaller parts. See [notebook](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/notebooks/massachusetts.ipynb) for preprocessing this dataset for our needs. [Link](https://www.kaggle.com/datasets/balraj98/massachusetts-roads-dataset) to original dataset.
+4. **Kaggle Dataset**: 400x400 pixel images from Los Angeles, filtered for road presence. The original dataset was downloaded using Googlemaps API. See [notebook](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/notebooks/kaggle.ipynb) for preprocessing this dataset for our needs. [Link](https://www.kaggle.com/datasets/timothlaborie/roadsegmentation-boston-losangeles) to original dataset.
 
 ## Installation
 - **Requirements**: Python 3.x, PyTorch, torchvision, timm, matplotlib, omegaconf, wandb
