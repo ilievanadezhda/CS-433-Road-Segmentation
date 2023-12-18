@@ -2,8 +2,9 @@ import numpy as np
 import torch
 import random
 
+
 def set_seeds(seed=42):
-    """ Set seeds for reproducibility.
+    """Set seeds for reproducibility.
 
     Args:
         seed (int, optional): Defaults to 42.
@@ -15,7 +16,7 @@ def set_seeds(seed=42):
 
 
 def step_loader(loader, n_steps=-1):
-    """ Step loader for training. This is used to create infinite loader for training. We use n_steps instead of n_epochs as metric.
+    """Step loader for training. This is used to create infinite loader for training. We use n_steps instead of n_epochs as metric.
 
     Args:
         loader (DataLoader): data loader for training
@@ -32,13 +33,13 @@ def step_loader(loader, n_steps=-1):
             step += 1
             if step == n_steps:
                 return
-            
-            
+
+
 def calculate_metrics(preds, labels, threshold=0.5):
-    """ Calculate metrics for evaluation.
+    """Calculate metrics for evaluation.
 
     Args:
-        preds: predicted labels 
+        preds: predicted labels
         labels: groundtruth labels
         threshold (float, optional): threshold for prediction. Defaults to 0.5.
 
@@ -73,7 +74,7 @@ def calculate_metrics(preds, labels, threshold=0.5):
 
 
 def batch_mean_and_sd(loader):
-    """ Calculates the mean and standard deviation of a dataset.
+    """Calculates the mean and standard deviation of a dataset.
 
     Args:
         loader: dataset loader

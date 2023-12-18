@@ -14,7 +14,7 @@ from utils import step_loader, calculate_metrics
 
 
 def prepare_transforms(args):
-    """ Prepare transforms for image and groundtruth.
+    """Prepare transforms for image and groundtruth.
 
     Args:
         args : arguments from config dictionary
@@ -91,10 +91,10 @@ def prepare_transforms(args):
 
 
 def prepare_normalization(normalization_flag):
-    """ Prepare normalization parameters.
+    """Prepare normalization parameters.
 
     Args:
-        normalization_flag: normalization flag to indicate which datasets are used. 
+        normalization_flag: normalization flag to indicate which datasets are used.
             "A": AIcrowd dataset only
             "AM": AIcrowd + Massachusetts dataset
             "AK": AIcrowd + Kaggle dataset
@@ -115,11 +115,15 @@ def prepare_normalization(normalization_flag):
         # AIcrowd + Kaggle dataset
         mean = [0.5268, 0.5174, 0.4892]
         std = [0.1967, 0.1894, 0.1867]
+    elif normalization_flag == "AMK":
+        mean = [0.5017, 0.4948, 0.4659]
+        std = [0.2118, 0.2036, 0.2026]
+
     return mean, std
 
 
 def prepare_sampler():
-    """ Prepare weighted random sampler for training. 
+    """Prepare weighted random sampler for training.
 
     Returns:
         sampler: sampler for training
@@ -144,7 +148,7 @@ def prepare_sampler():
 
 
 def prepare_data(args):
-    """ Prepare data loaders for training and validation.
+    """Prepare data loaders for training and validation.
 
     Args:
         args : arguments from config dictionary
@@ -204,7 +208,7 @@ def prepare_data(args):
         train_loader = torch.utils.data.DataLoader(
             train_set,
             batch_size=args.batch_size,
-            sampler = prepare_sampler(),
+            sampler=prepare_sampler(),
         )
     else:
         train_loader = torch.utils.data.DataLoader(
@@ -218,7 +222,7 @@ def prepare_data(args):
 
 
 def prepare_model(args):
-    """ Prepare model for training.
+    """Prepare model for training.
 
     Args:
         args : arguments from config dictionary
@@ -252,7 +256,7 @@ def prepare_model(args):
 
 
 def prepare_optimizer(model, args):
-    """ Prepare optimizer for training.
+    """Prepare optimizer for training.
 
     Args:
         model : model for training
@@ -275,7 +279,7 @@ def prepare_optimizer(model, args):
 
 
 def train(model, device, train_loader, val_loader, criterion, optimizer, args):
-    """ Training loop.
+    """Training loop.
 
     Args:
         model: model for training
@@ -299,7 +303,7 @@ def train(model, device, train_loader, val_loader, criterion, optimizer, args):
     )
     # upload the configuration file to WandB
     wandb.config.update(config_dict)
-    best_iou_score = 0.0
+    best_f1_score = 0.0
     # training loop
     for step, batch in step_loader(train_loader, args.n_steps):
         # training
@@ -360,8 +364,8 @@ def train(model, device, train_loader, val_loader, criterion, optimizer, args):
                 step=step,
             )
             # save the model if this is the best F1 score so far
-            if avg_iou > best_iou_score:
-                best_iou_score = avg_iou
+            if avg_f1 > best_f1_score:
+                best_f1_score = avg_f1
                 torch.save(model.state_dict(), args.model_save_name)
                 print("Best model saved at step: ", step)
 

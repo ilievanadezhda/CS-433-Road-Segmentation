@@ -6,7 +6,7 @@ from skimage.morphology import (
 
 
 def apply_morphological_operations(prediction):
-    """ Applies morphological operations to the prediction.
+    """Applies morphological operations to the prediction.
 
     Args:
         prediction: predicted labels
@@ -17,6 +17,5 @@ def apply_morphological_operations(prediction):
     # opening to the combined image to remove small white spots
     cleaned_prediction = opening(prediction, square(3))
     # erosion to thin up the roads
-    thinned_prediction = erosion(cleaned_prediction, square(4))
-    
+    thinned_prediction = erosion(cleaned_prediction, square(9))
     return thinned_prediction

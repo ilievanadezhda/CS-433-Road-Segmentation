@@ -3,6 +3,9 @@ import os
 import re
 from PIL import Image
 from torch.utils.data import Dataset
+import cv2
+import numpy as np
+
 
 class TestDataset(Dataset):
     def __init__(self, root_dir, transform=None):
@@ -13,7 +16,9 @@ class TestDataset(Dataset):
     def _get_image_paths(self):
         image_paths = []
         for folder_name in os.listdir(self.root_dir):
-            if folder_name.startswith("test_") and os.path.isdir(os.path.join(self.root_dir, folder_name)):
+            if folder_name.startswith("test_") and os.path.isdir(
+                os.path.join(self.root_dir, folder_name)
+            ):
                 folder_path = os.path.join(self.root_dir, folder_name)
                 for filename in os.listdir(folder_path):
                     if filename.startswith("test_") and filename.endswith(".png"):
@@ -35,6 +40,7 @@ class TestDataset(Dataset):
 
         return image
 
+
 def extract_index(s):
-    match = re.search(r'\d+', s)
+    match = re.search(r"\d+", s)
     return int(match.group()) if match else -1
