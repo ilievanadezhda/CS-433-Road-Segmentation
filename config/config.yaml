@@ -1,3 +1,5 @@
+"""This file contains sample configuration for training and evaluation. of different models."""
+
 # general settings
 seed: 0
 
@@ -54,7 +56,10 @@ model_out_channels: 1,
 model_init_features: 32,
 model_pretrained: False,
 model_save_name: "models/checkpoints/unetv2-1.pt",
-# ResNet50
+# UNetV3
+model_name: "UNetV3",  # Change for v3
+model_save_name: "models/checkpoints/unetv3-effnetb3.pt",
+# DeepLabV3 with ResNet50 backbone
 model_pretrained: False
 model_save_name: "models/checkpoints/deeplabv3_resnet50.pt",
 
