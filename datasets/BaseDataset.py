@@ -37,6 +37,6 @@ class BaseDataset(Dataset):
         image = Image.open(self.image_files[idx])
         ground_truth = Image.open(self.gt_files[idx])
         # convert the floats of the ground truth to integers, threshold 10
-        ground_truth = ground_truth.point(lambda x: 0 if x < 10 else 255)
+        ground_truth = ground_truth.point(lambda x: 0 if x < 127 else 255)
 
         return image, ground_truth
