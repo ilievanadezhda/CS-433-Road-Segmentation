@@ -30,7 +30,7 @@ Note: This guide is for users who have anaconda or miniconda installed. If you a
    conda create --name road_segmentation python==3.8.18
 3. Activate the environment
    ```bash
-   conda activate road_segmentaiton
+   conda activate road_segmentation
 4. Install the required packages:
    ``` bash
    pip install -r requirements.txt
