@@ -1,10 +1,10 @@
-torch
-torchvision
+torch==2.1.1
+torchvision==0.16.1
 timm
-matplotlib
-omegaconf
+matplotlib==3.7.4
+omegaconf==2.3.0
 wandb
 scikit-image
-segmentation-models-pytorch
+segmentation_models_pytorch==0.3.3
 cv2
 # tensorflow==2.11.0 For baseline
