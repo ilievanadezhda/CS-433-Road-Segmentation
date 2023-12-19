@@ -1,3 +1,9 @@
+"""
+This script is used to train the best model. It first trains the model with the initial 
+training configuration containing the 3 datasets, and then retrains it with the retraining 
+configuration containing only the AIcrowd dataset. The best model is saved as models/checkpoints/deeplabv3_resnet50_best.pt.
+"""
+
 import os
 import torch
 import gc

@@ -39,7 +39,7 @@ def load_checkpoint(model_path):
         checkpoint = torch.load(model_path)
         print("Checkpoint loaded successfully.")
     except:
-        print("Loading checkpoint failed. Trying to load it with map_location.")
+        print("Loading checkpoint with map_location.")
         checkpoint = torch.load(model_path, map_location=torch.device("cpu"))
     return checkpoint
 
@@ -120,7 +120,9 @@ def main():
     prediction_filenames = predict_and_save(model, test_dataset, OUTPUT_FOLDER)
 
     masks_to_submission("submission.csv", *prediction_filenames)
-    print(f"All predictions saved in folder: {OUTPUT_FOLDER}. Submission file created.")
+    print(
+        f"All predictions saved in folder: {OUTPUT_FOLDER}. Submission file created in root folder."
+    )
 
 
 if __name__ == "__main__":

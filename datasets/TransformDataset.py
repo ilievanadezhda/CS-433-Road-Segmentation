@@ -1,10 +1,15 @@
 """ Custom Transform Dataset Class for PyTorch """
-import os
-from PIL import Image
 from torch.utils.data import Dataset
 
+
 class TransformDataset(Dataset):
-    def __init__(self, base_dataset, random_transform = None, image_transform=None, gt_transform=None):
+    def __init__(
+        self,
+        base_dataset,
+        random_transform=None,
+        image_transform=None,
+        gt_transform=None,
+    ):
         self.base_dataset = base_dataset
         self.random_transform = random_transform
         self.image_transform = image_transform

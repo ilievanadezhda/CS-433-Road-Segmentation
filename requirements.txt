@@ -4,4 +4,7 @@ timm
 matplotlib
 omegaconf
 wandb
+scikit-image
+segmentation-models-pytorch
+cv2
 # tensorflow==2.11.0 For baseline
