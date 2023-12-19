@@ -4,11 +4,13 @@ import gc
 from omegaconf import OmegaConf
 from utils import set_seeds
 from train_utils import prepare_data, prepare_model, prepare_optimizer, train
+from utils import set_seeds
 
 import warnings
 
 warnings.filterwarnings("ignore")
 
+set_seeds()
 # define constants
 MODEL_DIR = "models"
 INITIAL_TRAIN_CONFIG = "config/initial_train_config.yaml"
