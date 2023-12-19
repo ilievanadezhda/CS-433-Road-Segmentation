@@ -9,11 +9,43 @@ from postprocessing import apply_morphological_operations
 from skimage.morphology import square, opening, erosion
 import warnings
 from utils import set_seeds
+import requests
 
 warnings.filterwarnings("ignore")
 
 # set seeds
 set_seeds()
+
+
+def download_model():
+    # directory path
+    directory_path = "models/checkpoints"
+    file_path = os.path.join(directory_path, "deeplabv3_resnet50_HUGE_retrain.pt")
+
+    # if the file deeplabv3_resnet50_HUGE_retrain.pt does not exist in the models directory
+    if not os.path.exists(file_path):
+        print("Created folder", directory_path)
+
+        # dropbox url
+        dropbox_url = "https://www.dropbox.com/scl/fi/hw6f9pl16ki11aifj28wv/deeplabv3_resnet50_HUGE_retrain.pt?rlkey=ct9x59mf9jbcxfwbihdae1176&dl=1"  # =1
+
+        print("Downloading the model...")
+        # downloading the file
+        response = requests.get(dropbox_url)
+        if response.status_code == 200:
+            with open(file_path, "wb") as file:
+                file.write(response.content)
+            message = "Download successful. The file has been saved as '{}'.".format(
+                file_path
+            )
+        else:
+            message = "Failed to download the file. Error code: " + str(
+                response.status_code
+            )
+
+        print(message)
+    else:
+        print("Model already downloaded.")
 
 
 def apply_morphological_operations(prediction):
@@ -103,6 +135,9 @@ def main():
     MODEL = "models/checkpoints/deeplabv3_resnet50_HUGE_retrain.pt"
     TEST_FOLDER = "datasets/test/"
     OUTPUT_FOLDER = "predictions"
+
+    print("Setup: Downloading the model checkpoint")
+    download_model()
 
     print("Starting the segmentation process...")
 
