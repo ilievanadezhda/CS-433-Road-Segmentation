@@ -7,4 +7,5 @@ wandb
 scikit-image
 segmentation_models_pytorch==0.3.3
 cv2
+requests
 # tensorflow==2.11.0 For baseline
