@@ -20,7 +20,7 @@ In the evolving landscape of digital image processing and computer vision, road 
 4. **Kaggle Dataset**: 400x400 pixel images from Los Angeles, filtered for road presence. The original dataset was downloaded using Googlemaps API. See [notebook](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/notebooks/kaggle.ipynb) for preprocessing this dataset for our needs. [Link](https://www.kaggle.com/datasets/timothlaborie/roadsegmentation-boston-losangeles) to original dataset.
 
 **Download Data**
-- For ease of use, we provide a link so you can download the datasets already preprocessed. [Download Data](https://www.dropbox.com/scl/fi/vl5ygbyuyhchcp7getra7/datasets.zip?rlkey=avjkd4q1x0v7dilid56h0fdy8&dl=0%22)
+- Downloading these datasets is optional, they are not needed for the best submission, however if the user wants to reproduce the training process they are required. For ease of use, we provide a link so you can download the datasets already preprocessed. [Download Data](https://www.dropbox.com/scl/fi/vl5ygbyuyhchcp7getra7/datasets.zip?rlkey=avjkd4q1x0v7dilid56h0fdy8&dl=0%22)
 
 
 ## Installation
@@ -35,10 +35,27 @@ Note: This guide is for users who have anaconda or miniconda installed. If you a
 3. Activate the environment
    ```bash
    conda activate road_segmentation
+   ```
 4. Install the required packages:
    ``` bash
    pip install -r requirements.txt
-
+   ```
+5. After installation the folder structure should look like this:
+``` bash
+├── config
+├── datasets
+│   ├── kaggle (optional)
+│   ├── massachusetts_384 (optional)
+│   ├── test
+│   ├── train
+│   └── validation
+├── examples
+│   └── baseline_model
+├── models
+│   ├── checkpoints
+├── notebooks
+└── predictions
+```
 ## Usage
 - **Training**: See [training_pipeline](), this script takes 12 hours to run on a NVIDIA GeForce RTX 3050 Ti (laptop version). The additional datasets (preprocessed kaggle and massachusetts) will be downloaded automatically on the first execution of the following script. To reproduce the best model checkpoint execute:
   ```bash
