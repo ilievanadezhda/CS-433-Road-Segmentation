@@ -27,7 +27,7 @@ def download_model():
         print("Created folder", directory_path)
 
         # dropbox url
-        dropbox_url = "https://www.dropbox.com/scl/fi/hw6f9pl16ki11aifj28wv/deeplabv3_resnet50_HUGE_retrain.pt?rlkey=ct9x59mf9jbcxfwbihdae1176&dl=1"  # =1
+        dropbox_url = "https://www.dropbox.com/scl/fi/hw6f9pl16ki11aifj28wv/deeplabv3_resnet50_HUGE_retrain.pt?rlkey=ct9x59mf9jbcxfwbihdae1176&dl=1"
 
         print("Downloading the model...")
         # downloading the file
