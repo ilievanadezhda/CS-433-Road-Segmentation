@@ -20,7 +20,7 @@ warnings.filterwarnings("ignore")
 set_seeds()
 
 # define constants
-MODEL_DIR = "models/chekpoints"
+MODEL_DIR = "models/checkpoints"
 INITIAL_TRAIN_CONFIG = "config/initial_train_config.yaml"
 RETRAIN_CONFIG = "config/retrain_config.yaml"
 MODEL_CHECKPOINT = "models/checkpoints/deeplabv3_resnet50_large.pt"
