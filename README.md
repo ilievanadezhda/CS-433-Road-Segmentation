@@ -19,6 +19,10 @@ In the evolving landscape of digital image processing and computer vision, road 
 2. **Massachusetts Roads Dataset**: 1500x1500 pixel images, segmented into smaller parts. See [notebook](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/notebooks/massachusetts.ipynb) for preprocessing this dataset for our needs. [Link](https://www.kaggle.com/datasets/balraj98/massachusetts-roads-dataset) to original dataset.
 4. **Kaggle Dataset**: 400x400 pixel images from Los Angeles, filtered for road presence. The original dataset was downloaded using Googlemaps API. See [notebook](https://github.com/ilievanadezhda/Road-Segmentation-ML/blob/main/notebooks/kaggle.ipynb) for preprocessing this dataset for our needs. [Link](https://www.kaggle.com/datasets/timothlaborie/roadsegmentation-boston-losangeles) to original dataset.
 
+**Download Data**
+- For ease of use, we provide a link so you can download the datasets already preprocessed. [Download Data](https://www.dropbox.com/scl/fi/vl5ygbyuyhchcp7getra7/datasets.zip?rlkey=avjkd4q1x0v7dilid56h0fdy8&dl=0%22)
+
+
 ## Installation
 Note: This guide is for users who have anaconda or miniconda installed. If you are using a different tool for managing environments such as `venv` then skip steps [2-4] and create the environment following the appropriate [guideline](https://docs.python.org/3/library/venv.html).
 1. Clone the repository:
@@ -36,10 +40,10 @@ Note: This guide is for users who have anaconda or miniconda installed. If you a
    pip install -r requirements.txt
 
 ## Usage
-- **Training**: See [training_pipeline](), this script takes 12 hours to run on a NVIDIA GeForce RTX 3050 Ti (laptop version). To reproduce the best model checkpoint execute:
+- **Training**: See [training_pipeline](), this script takes 12 hours to run on a NVIDIA GeForce RTX 3050 Ti (laptop version). The additional datasets (preprocessed kaggle and massachusetts) will be downloaded automatically on the first execution of the following script. To reproduce the best model checkpoint execute:
   ```bash
   pyton training_pipeline.py
-- **Testing**: For ease of use, we provide the best models' checkpoint. To reproduce the best result execute:
+- **Testing**: For ease of use, we provide the best models' checkpoint which will be downloaded from Dropbox when executing the run script. To reproduce the best result execute:
   ```bash
   python run.py
 
