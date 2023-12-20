@@ -7,22 +7,72 @@ configuration containing only the AIcrowd dataset. The best model is saved as mo
 import os
 import torch
 import gc
+import zipfile
+import requests
 from omegaconf import OmegaConf
 from utils import set_seeds
 from train_utils import prepare_data, prepare_model, prepare_optimizer, train
 from utils import set_seeds
-
 import warnings
 
 warnings.filterwarnings("ignore")
 
 set_seeds()
+
 # define constants
-MODEL_DIR = "models"
+MODEL_DIR = "models/chekpoints"
 INITIAL_TRAIN_CONFIG = "config/initial_train_config.yaml"
 RETRAIN_CONFIG = "config/retrain_config.yaml"
 MODEL_CHECKPOINT = "models/checkpoints/deeplabv3_resnet50_large.pt"
 BEST_MODEL_CHECKPOINT = "models/checkpoints/deeplabv3_resnet50_best.pt"
+
+
+def download_data():
+    """Download massachusetts and kaggle datasets."""
+    # if folders datasets/kaggle and datasets/massachusetts_384 do not exist, download the datasets
+    if not os.path.exists("datasets/kaggle/") or not os.path.exists(
+        "datasets/massachusetts_384/"
+    ):
+        # dropbox URL
+        dropbox_url = "https://www.dropbox.com/scl/fi/vl5ygbyuyhchcp7getra7/datasets.zip?rlkey=avjkd4q1x0v7dilid56h0fdy8&dl=1"
+
+        # file path where the .zip file will be saved
+        file_path = "datasets/datasets.zip"
+
+        response = requests.get(dropbox_url)
+
+        if response.status_code == 200:
+            with open(file_path, "wb") as file:
+                file.write(response.content)
+            message = "Download successful. The file has been saved as 'datasets.zip'."
+        else:
+            message = "Failed to download the file. Error code: " + str(
+                response.status_code
+            )
+
+        print(message)
+
+        # path to the downloaded .zip file
+        zip_file_path = "datasets/datasets.zip"
+
+        # directory to extract the contents of the zip file, in this current folder
+        extraction_path = "datasets/"
+
+        # unzipping the file
+        with zipfile.ZipFile(zip_file_path, "r") as zip_ref:
+            zip_ref.extractall(extraction_path)
+
+        extraction_message = (
+            f"The contents of the zip file have been extracted to: {extraction_path}"
+        )
+
+        print(extraction_message)
+
+        # delete the datasets.zip file
+        os.remove(zip_file_path)
+
+    else:
+        print("Datasets already downloaded.")
 
 
 def create_directory(directory):
@@ -63,6 +113,10 @@ def initialize_training(config):
 
 
 def main():
+    # download the datasets
+    print("Downloading datasets...")
+    download_data()
+
     print("Starting the training process...")
 
     # create model directory
