@@ -57,7 +57,7 @@ Note: This guide is for users who have anaconda or miniconda installed. If you a
 └── predictions
 ```
 ## Usage
-- **Training**: See [training_pipeline](), this script takes 12 hours to run on a NVIDIA GeForce RTX 3050 Ti (laptop version). The additional datasets (preprocessed kaggle and massachusetts) will be downloaded automatically on the first execution of the following script. To reproduce the best model checkpoint execute:
+- **Training**: Training the best model takes 12 hours to run on a NVIDIA GeForce RTX 3050 Ti (laptop version). The additional datasets (preprocessed kaggle and massachusetts) will be downloaded automatically on the first execution of the following script. To reproduce the best model checkpoint execute:
   ```bash
   pyton training_pipeline.py
 - **Testing**: For ease of use, we provide the best models' checkpoint which will be downloaded from Dropbox when executing the run script. To reproduce the best result execute:
